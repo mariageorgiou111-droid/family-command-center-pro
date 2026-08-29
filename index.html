@@ -4,41 +4,41 @@
 @media(max-width:900px){body{background-position:center top;background-size:cover;background-attachment:scroll}.app{padding-bottom:76px}.app{grid-template-columns:1fr}aside{height:auto;position:fixed;z-index:30;left:0;right:0;bottom:0;top:auto;margin:0;padding:6px 7px calc(6px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0}.brand{display:none}aside>.home-art{display:none}nav{display:flex;overflow-x:auto;gap:3px;padding:0;scrollbar-width:none;justify-content:flex-start}nav::-webkit-scrollbar{display:none}nav button{min-width:92px;justify-content:center;padding:9px 8px;margin:0;font-size:12px}.top{align-items:flex-start;flex-direction:column;padding:16px 17px;min-height:190px}.top .home-art{display:block;right:15px;top:20px;transform:scale(.72);transform-origin:top right}.top>div:first-child{padding-right:95px}.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.form{grid-template-columns:1fr}.controls{width:100%;justify-content:flex-start}.controls select,.controls .theme{padding:8px 9px}main{padding:10px 10px 24px}.theme-gallery{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){body:before{background:rgba(248,244,235,.06)}.grid{grid-template-columns:1fr 1fr;gap:10px}.card{padding:14px}.kpi b{font-size:21px}.top{padding:17px}h1{font-size:27px}}
 </style>
-<style id="background-v8-fix">
-html, body { min-height: 100%; }
+
+
+
+<style id="background-v9-fix">
+html { background:#e7d3b3; min-height:100%; }
 body {
-  background-image: none !important;
-  position: relative;
+  min-height:100%;
+  background:none !important;
+  position:relative;
 }
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background-image: url("family-home-cozy-v7.jpg");
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
-  background-color: #e9dcc5;
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background-color:#e7d3b3;
+  background-image:url("family-home-cozy-v9.jpg");
+  background-repeat:no-repeat;
+  background-position:center top;
+  background-size:1920px auto;
 }
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: rgba(248, 243, 232, 0.10);
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:rgba(255,250,240,.10);
 }
-@media (max-width: 768px) {
-  body::before {
-    /* KEY FIX: show the whole room instead of zooming/cropping it */
-    background-size: 100% auto !important;
-    background-position: center top !important;
-    background-attachment: scroll !important;
-  }
-  body::after {
-    background: rgba(248, 243, 232, 0.06);
+@media (max-width:768px){
+  body::before{
+    /* Never crop/zoom on phones: fit the entire scene to viewport width. */
+    background-size:100vw auto !important;
+    background-position:center top !important;
   }
 }
 </style>
