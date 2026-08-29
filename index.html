@@ -9,7 +9,7 @@
 body.happy{--bg:#fbf5ff;--panel:#fff;--soft:#efe2ff;--dark:#70419b;--accent:#ff6f8c;--text:#52345f}
 .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
 aside{background:linear-gradient(180deg,var(--soft),var(--panel));padding:28px 18px;border-right:1px solid #ffffffaa;position:sticky;top:0;height:100vh}
-.brand{font-size:23px;font-weight:800;line-height:1.05;margin-bottom:30px}.brand small{display:block;font-size:12px;color:var(--accent);margin-top:8px}
+.brand{font-size:23px;font-weight:800;line-height:1.05;margin-bottom:18px}.home-art{height:125px;margin:0 -5px 22px;border-radius:22px;position:relative;overflow:hidden;background:linear-gradient(#dfeee7 0 58%,#cfdcbd 58%)}.sun{position:absolute;width:34px;height:34px;border-radius:50%;background:#f3c86b;right:20px;top:16px}.house{position:absolute;width:92px;height:58px;background:#fff7e7;left:42px;bottom:18px;border-radius:5px}.house:before{content:'';position:absolute;border-left:56px solid transparent;border-right:56px solid transparent;border-bottom:48px solid #bd6f58;left:-10px;top:-38px}.door{position:absolute;width:22px;height:36px;background:#6e9473;bottom:0;left:35px}.tree{position:absolute;width:30px;height:54px;background:#6f9b6e;border-radius:55% 55% 45% 45%;bottom:10px}.tree.t1{left:10px}.tree.t2{right:8px;height:44px;background:#8eaa78}.brand small{display:block;font-size:12px;color:var(--accent);margin-top:8px}
 nav button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:12px 14px;border-radius:14px;margin:5px 0;font-weight:700;color:var(--text);cursor:pointer}
 nav button.active,nav button:hover{background:var(--dark);color:white}
 main{padding:30px;max-width:1450px}.top{display:flex;justify-content:space-between;gap:20px;align-items:center}
@@ -25,16 +25,16 @@ h1{font-size:31px;margin:0}.tag{color:var(--accent);font-weight:700;margin-top:6
 @media(max-width:850px){.app{grid-template-columns:1fr}aside{height:auto;position:relative}nav{display:flex;overflow:auto}nav button{min-width:max-content}.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
 </style></head>
 <body>
-<div class="app"><aside><div class="brand">Our Home ♥<small>FAMILY COMMAND CENTER PRO</small></div>
+<div class="app"><aside><div class="brand">Our Home ♥<small>FAMILY COMMAND CENTER PRO</small></div><div class="home-art"><div class="sun"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div>
 <nav id="nav"></nav></aside><main>
 <div class="top"><div><h1 id="title">Good morning ♥</h1><div class="tag" id="tag">Our Home ♥ Our Plan ♥ Our Happy Life</div></div>
 <div class="controls"><select id="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option></select><select id="datefmt"><option value="us">Sep 9, 2026</option><option value="eu">09-Sep-2026</option><option value="iso">2026-09-09</option></select><button class="theme" onclick="toggleTheme()">🌈 Change theme</button></div></div>
 <div id="dashboard" class="page active">
-<div class="grid"><div class="card kpi"><span>OPEN TASKS</span><b id="taskCount">3</b></div><div class="card kpi"><span>BILLS DUE</span><b id="billTotal">$254.60</b></div><div class="card kpi"><span>BALANCE</span><b id="balance">$4,827.21</b></div><div class="card kpi"><span>SAVINGS RATE</span><b>18.5%</b></div></div>
+<div class="grid"><div class="card kpi"><span>OPEN TASKS</span><b id="taskCount">3</b></div><div class="card kpi"><span>BILLS DUE</span><b id="billTotal" data-money="254.60">$254.60</b></div><div class="card kpi"><span>BALANCE</span><b id="balance" data-money="4827.21">$4,827.21</b></div><div class="card kpi"><span>SAVINGS RATE</span><b>18.5%</b></div></div>
 <div class="two"><div class="section"><h2>This Week</h2><div id="week"></div></div><div class="section"><h2>Don't Forget</h2><div class="row"><span>💧 Water bill</span><span class="pill">Due soon</span></div><div class="row"><span>🎒 School supplies</span><span class="pill">Friday</span></div><div class="row"><span>🏠 Air-con service</span><span class="pill">Book</span></div></div></div>
 <div class="two" style="margin-top:18px"><div class="section"><h2>Budget Snapshot</h2><div id="budget"></div></div><div class="section"><h2>Needs vs Wants</h2><div class="row"><span>Needs</span><b>86%</b></div><div class="bar"><i style="width:86%"></i></div><div class="row"><span>Wants</span><b>14%</b></div><div class="bar"><i style="width:14%"></i></div></div></div></div>
 <div id="tasks" class="page"><div class="section"><h2>✓ Tasks</h2><div class="form"><input id="newTask" placeholder="Add a task..."><button class="action" onclick="addTask()">Add</button></div><div id="taskList"></div><div class="note">Saved automatically on this device.</div></div></div>
-<div id="finance" class="page"><div class="grid"><div class="card kpi"><span>INCOME</span><b>$5,150</b></div><div class="card kpi"><span>EXPENSES</span><b>$322.79</b></div><div class="card kpi"><span>BILLS DUE</span><b>$254.60</b></div><div class="card kpi"><span>SAVINGS GOAL</span><b>$500</b></div></div><div class="section"><h2>Where the money goes</h2><div id="financeBars"></div></div></div>
+<div id="finance" class="page"><div class="grid"><div class="card kpi"><span>INCOME</span><b data-money="5150">$5,150</b></div><div class="card kpi"><span>EXPENSES</span><b data-money="322.79">$322.79</b></div><div class="card kpi"><span>BILLS DUE</span><b data-money="254.60">$254.60</b></div><div class="card kpi"><span>SAVINGS GOAL</span><b data-money="500">$500</b></div></div><div class="section"><h2>Where the money goes</h2><div id="financeBars"></div></div></div>
 <div id="meals" class="page"><div class="section"><h2>🍴 Meal Planner</h2><div id="mealRows"></div></div></div>
 <div id="calendar" class="page"><div class="section"><h2>▣ Family Calendar</h2><div id="calendarRows"></div></div></div>
 <div id="home" class="page"><div class="section"><h2>⌂ Home Care</h2><div class="row"><span>Air-con service</span><span class="pill">September</span></div><div class="row"><span>Water filter</span><span class="pill">October</span></div><div class="row"><span>Smoke alarm batteries</span><span class="pill">December</span></div></div></div>
@@ -44,13 +44,22 @@ h1{font-size:31px;margin:0}.tag{color:var(--accent);font-weight:700;margin-top:6
 const pages=[['dashboard','⌂ Dashboard'],['calendar','▣ Calendar'],['tasks','✓ Tasks'],['home','⌂ Home Care'],['finance','$ Finance'],['meals','🍴 Meals'],['settings','⚙ Settings']];
 const nav=document.getElementById('nav'); pages.forEach((p,i)=>{let b=document.createElement('button');b.textContent=p[1];b.className=i?'':'active';b.onclick=()=>show(p[0],b);nav.appendChild(b)});
 function show(id,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
-let happy=false;function toggleTheme(){happy=!happy;document.body.classList.toggle('happy',happy);document.querySelector('.brand').innerHTML=(happy?'Happy Family 🌈':'Our Home ♥')+'<small>FAMILY COMMAND CENTER PRO</small>';document.getElementById('tag').textContent=happy?'Organized home. Happier family. ♥':'Our Home ♥ Our Plan ♥ Our Happy Life'}
+let happy=localStorage.getItem('fccTheme')==='happy';document.body.classList.toggle('happy',happy);function toggleTheme(){happy=!happy;document.body.classList.toggle('happy',happy);localStorage.setItem('fccTheme',happy?'happy':'home');document.querySelector('.brand').innerHTML=(happy?'Happy Family 🌈':'Our Home ♥')+'<small>FAMILY COMMAND CENTER PRO</small>';document.getElementById('tag').textContent=happy?'Organized home. Happier family. ♥':'Our Home ♥ Our Plan ♥ Our Happy Life'}
 let tasks=JSON.parse(localStorage.getItem('fccTasks')||'["Book dentist","Buy school supplies","Call plumber"]');
 function renderTasks(){taskList.innerHTML='';tasks.forEach((t,i)=>{let r=document.createElement('div');r.className='row';r.innerHTML=`<span>${t}</span><button onclick="doneTask(${i})">Done</button>`;taskList.appendChild(r)});taskCount.textContent=tasks.length}
 function addTask(){if(newTask.value.trim()){tasks.push(newTask.value.trim());newTask.value='';save()}} function doneTask(i){tasks.splice(i,1);save()} function save(){localStorage.setItem('fccTasks',JSON.stringify(tasks));renderTasks()} renderTasks();
 week.innerHTML=['Mon · School pickup · 15:30','Tue · Football · 17:00','Wed · Grocery run · 18:00','Fri · Family movie night · 20:00'].map(x=>`<div class="row"><span>${x}</span><span>♡</span></div>`).join('');
 budget.innerHTML=[['Groceries',62],['Utilities',48],['Transport',35],['School & Kids',71]].map(x=>`<div class="row"><span>${x[0]}</span><b>${x[1]}%</b></div><div class="bar"><i style="width:${x[1]}%"></i></div>`).join('');
-financeBars.innerHTML=[['Groceries',126.4,70],['Transport',60,40],['School & Kids',48.9,32],['Utilities',42,28]].map(x=>`<div class="row"><span>${x[0]}</span><b>$${x[1]}</b></div><div class="bar"><i style="width:${x[2]}%"></i></div>`).join('');
+const financeData=[['Groceries',126.4,70],['Transport',60,40],['School & Kids',48.9,32],['Utilities',42,28]];
+function symbol(c){return {USD:'$',EUR:'€',GBP:'£',CAD:'C$',AUD:'A$'}[c]||c+' ';}
+function money(v){return symbol(currency.value)+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function renderMoney(){
+ document.querySelectorAll('[data-money]').forEach(el=>el.textContent=money(el.dataset.money));
+ financeBars.innerHTML=financeData.map(x=>`<div class="row"><span>${x[0]}</span><b>${money(x[1])}</b></div><div class="bar"><i style="width:${x[2]}%"></i></div>`).join('');
+ localStorage.setItem('fccCurrency',currency.value);
+}
+currency.value=localStorage.getItem('fccCurrency')||'EUR'; currency.addEventListener('change',renderMoney); renderMoney();
+datefmt.value=localStorage.getItem('fccDateFmt')||'eu'; datefmt.addEventListener('change',()=>localStorage.setItem('fccDateFmt',datefmt.value));
 mealRows.innerHTML=['Mon · Chicken wraps + salad','Tue · Pasta night','Wed · Homemade pizza','Thu · Rice bowls','Fri · Taco night'].map(x=>`<div class="row"><span>${x}</span><span>♡</span></div>`).join('');
 calendarRows.innerHTML=['Sep 2 · School starts','Sep 5 · Internet bill','Sep 9 · Water bill','Sep 12 · Dentist','Sep 20 · Electricity bill'].map(x=>`<div class="row"><span>${x}</span><span class="pill">Family</span></div>`).join('');
 </script></body></html>
