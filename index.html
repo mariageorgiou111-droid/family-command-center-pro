@@ -7,38 +7,43 @@
 
 
 
-<style id="background-v9-fix">
-html { background:#e7d3b3; min-height:100%; }
+
+
+
+<style id="background-v10-approved-fix">
+html {
+  min-height: 100%;
+  background: #eadcc8;
+}
 body {
-  min-height:100%;
-  background:none !important;
-  position:relative;
+  min-height: 100%;
+  position: relative;
+  background: transparent !important;
 }
 body::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-  background-color:#e7d3b3;
-  background-image:url("family-home-cozy-v9.jpg");
-  background-repeat:no-repeat;
-  background-position:center top;
-  background-size:1920px auto;
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #eadcc8;
+  background-image: url("family-home-approved-v10.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: contain;
 }
 body::after {
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  background:rgba(255,250,240,.10);
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(255, 250, 241, 0.08);
 }
-@media (max-width:768px){
-  body::before{
-    /* Never crop/zoom on phones: fit the entire scene to viewport width. */
-    background-size:100vw auto !important;
-    background-position:center top !important;
+@media (max-width: 768px) {
+  body::before {
+    background-size: 100% auto !important;
+    background-position: center top !important;
   }
 }
 </style>
