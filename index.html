@@ -99,30 +99,38 @@ body::after{content:none !important}
 }
 </style>
 
-<meta name="fcc-version" content="6.5-settings-safe">
+<meta name="fcc-version" content="6.7-first-launch-safe">
 
 <style id="settings-v65-polish">
 #settings h3{color:var(--sage-dark);font-size:18px;margin:18px 0 10px}.settings-actions{display:flex;gap:10px;flex-wrap:wrap}.settings-import{display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.settings-actions>*{min-height:46px}.settings-saved{padding:10px 12px;border-radius:12px;background:rgba(128,151,124,.14);color:var(--sage-dark);font-weight:700;margin-top:12px}@media(max-width:600px){#settings .form.simple{grid-template-columns:1fr!important}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions>*{width:100%;box-sizing:border-box}}
 </style>
-</head><body><div class="app"><aside><div class="brand">Our Home ♥<small>FAMILY COMMAND CENTER PRO</small></div><div class="home-art"><div class="sun"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><nav id="nav"></nav></aside><main>
-<div class="top"><div><h1 id="timeGreeting">Good morning ♥</h1><div id="homeName" style="font-family:Georgia,serif;font-size:1.28rem;font-weight:800;color:var(--ink);margin:2px 0 4px">Our Home</div><div class="tag" id="tag">Our Home ♥ Our Plan ♥ Our Happy Life</div></div><div class="home-art"><div class="sun" id="timeSky"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><div class="controls"><select id="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select><select id="datefmt"><option value="us">Date</option><option value="eu">Date</option><option value="iso">Date</option></select></div></div>
+
+<style id="onboarding-gate-v675">
+body.fcc-booting .app,body.fcc-first-launch .app{display:none!important}
+body.fcc-booting #onboarding,body.fcc-first-launch #onboarding{display:flex!important;visibility:visible!important}
+</style>
+<style id="onboarding-v67">
+.onboard-backdrop{position:fixed;inset:0;z-index:99999;background:rgba(34,43,36,.56);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}.onboard-backdrop.show{display:flex}body.fcc-first-launch>.shell,body.fcc-first-launch>.app,body.fcc-first-launch>header,body.fcc-first-launch>main{visibility:hidden}body.fcc-first-launch #onboarding{visibility:visible}.onboard-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:rgba(255,252,244,.98);border:1px solid rgba(120,140,118,.28);border-radius:28px;box-shadow:0 28px 80px rgba(25,35,28,.28);padding:28px}.onboard-mark{text-align:center;font-size:48px}.onboard-card h2{text-align:center;font-family:Georgia,serif;font-size:30px;margin:8px 0;color:var(--ink)}.onboard-lead{text-align:center;color:var(--muted);margin:0 auto 24px;max-width:520px}.onboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.onboard-field{display:flex;flex-direction:column;gap:7px}.onboard-field.full{grid-column:1/-1}.onboard-field label{font-weight:800;color:var(--sage-dark);font-size:13px}.onboard-field input,.onboard-field select{width:100%;box-sizing:border-box}.onboard-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}.onboard-actions .action{min-height:52px;font-size:16px}.onboard-sample{text-align:center;margin-top:12px}.onboard-sample button{border:0;background:transparent;color:var(--sage-dark);font-weight:800;text-decoration:underline;cursor:pointer}.welcome-empty{padding:14px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}.member-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(128,151,124,.14);font-weight:700;margin-top:8px}@media(max-width:600px){.onboard-card{padding:22px 18px;border-radius:22px}.onboard-card h2{font-size:26px}.onboard-grid{grid-template-columns:1fr}.onboard-field.full{grid-column:auto}}
+</style>
+</head><body class="fcc-booting"><div id="onboarding" class="onboard-backdrop" role="dialog" aria-modal="true" aria-labelledby="onboardTitle"><div class="onboard-card"><div class="onboard-mark">🏠</div><h2 id="onboardTitle">Welcome to your Family Command Center ♥</h2><p class="onboard-lead">Let’s make it yours. A few quick choices and your home starts clean — ready for your real plans, not somebody else’s demo life.</p><div class="onboard-grid"><div class="onboard-field full"><label for="obHome">Family / Home name</label><input id="obHome" placeholder="e.g. The Green Family"></div><div class="onboard-field"><label for="obUser">Your name</label><input id="obUser" placeholder="e.g. Maria"></div><div class="onboard-field"><label for="obCurrency">Currency</label><select id="obCurrency"><option>EUR</option><option>USD</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select></div><div class="onboard-field"><label for="obDate">Date format</label><select id="obDate"><option value="eu">DD/MM/YYYY</option><option value="us">MM/DD/YYYY</option><option value="iso">YYYY-MM-DD</option></select></div><div class="onboard-field"><label for="obTheme">Theme</label><select id="obTheme"><option value="auto">Automatic seasonal</option><option value="spring">🌸 Spring</option><option value="summer">☀️ Summer</option><option value="autumn">🍂 Autumn</option><option value="winter">❄️ Winter</option><option value="valentine">💘 Valentine’s</option><option value="easter">🐣 Easter</option><option value="halloween">🎃 Halloween</option><option value="christmas">🎄 Christmas</option></select></div></div><div class="onboard-actions"><button class="action" onclick="finishOnboarding(false)">Start My Command Center</button></div><div class="onboard-sample"><button onclick="finishOnboarding(true)">Preview with sample data instead</button></div></div></div><div class="app"><aside><div class="brand">Our Home ♥<small>FAMILY COMMAND CENTER PRO</small></div><div class="home-art"><div class="sun"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><nav id="nav"></nav></aside><main>
+<div class="top"><div><h1 id="timeGreeting">Good morning ♥</h1><div id="homeName" style="font-family:Georgia,serif;font-size:1.28rem;font-weight:800;color:var(--ink);margin:2px 0 4px">Our Home</div><div class="tag" id="tag">Our Home ♥ Our Plan ♥ Our Happy Life</div></div><div class="home-art"><div class="sun" id="timeSky"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><div class="controls"><span class="ghost" id="dashboardCurrency" style="pointer-events:none;display:inline-flex;align-items:center;min-width:64px;min-height:40px;font-weight:800;color:#314237;font-size:16px"></span><span class="ghost" id="dashboardDate" style="pointer-events:none;display:inline-flex;align-items:center;min-width:118px;min-height:40px;font-weight:800;color:#314237;font-size:16px"></span><select id="currency" style="display:none"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select><select id="datefmt" style="display:none"><option value="us">Date</option><option value="eu">Date</option><option value="iso">Date</option></select></div></div>
 <div id="dashboard" class="page active"><div class="grid"><div class="card kpi"><span>OPEN TASKS</span><b id="taskCount">0</b><small>Keep going! ✨</small></div><div class="card kpi"><span>BILLS DUE</span><b id="billTotal">—</b><small>Upcoming payments</small></div><div class="card kpi"><span>BALANCE</span><b id="balance">—</b><small>All accounts</small></div><div class="card kpi"><span>SAVINGS RATE</span><b id="savingRate">—</b><small>Monthly snapshot 🎉</small></div></div><div class="two"><div class="section"><h2>This Week</h2><div id="week"></div></div><div class="section"><h2>Don't Forget</h2><div id="reminders"></div></div></div><div class="two"><div class="section"><h2>Budget Snapshot</h2><div id="budget"></div></div><div class="section"><h2>Meals Ahead</h2><div id="mealPreview"></div></div></div></div>
-<div id="calendar" class="page"><div class="section"><h2>▣ Family Calendar</h2><div class="form"><input id="eventTitle" placeholder="Event"><input id="eventDate" type="date"><input id="eventTime" type="time"><button class="action" onclick="addEvent()">Add</button></div><div class="form simple"><input id="eventNotes" placeholder="Notes (optional)"><span></span></div><div id="calendarRows"></div><div class="note">Events are saved automatically and upcoming events appear on the Dashboard.</div></div></div>
-<div id="tasks" class="page"><div class="section"><h2>✓ Tasks</h2><div class="form"><input id="newTask" placeholder="Add a task"><input id="taskDue" type="date"><select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select><button class="action" onclick="addTask()">Add</button></div><div class="form simple"><input id="taskNotes" placeholder="Notes (optional)"><span></span></div><div id="taskList"></div><div class="note">Open tasks update the Dashboard automatically. Completed tasks stay here until you delete them.</div></div></div>
+<div id="calendar" class="page"><div class="section"><h2>▣ Family Calendar</h2><div class="form"><input id="eventTitle" placeholder="Event"><input id="eventDate" type="date" data-fcc-date="1"><input id="eventTime" type="time"><button class="action" onclick="addEvent()">Add</button></div><div class="form simple"><input id="eventNotes" placeholder="Notes (optional)"><span></span></div><div id="calendarRows"></div><div class="note">Events are saved automatically and upcoming events appear on the Dashboard.</div></div></div>
+<div id="tasks" class="page"><div class="section"><h2>✓ Tasks</h2><div class="form"><input id="newTask" placeholder="Add a task"><input id="taskDue" type="date" data-fcc-date="1"><select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select><button class="action" onclick="addTask()">Add</button></div><div class="form simple"><input id="taskNotes" placeholder="Notes (optional)"><span></span></div><div id="taskList"></div><div class="note">Open tasks update the Dashboard automatically. Completed tasks stay here until you delete them.</div></div></div>
 <div id="home" class="page">
 <div class="grid"><div class="card kpi"><span>DUE SOON</span><b id="homeDueSoon">0</b><small>Next 30 days</small></div><div class="card kpi"><span>OVERDUE</span><b id="homeOverdue">0</b><small>Needs attention</small></div><div class="card kpi"><span>COMPLETED</span><b id="homeCompleted">0</b><small>This month</small></div><div class="card kpi"><span>WARRANTIES</span><b id="homeWarranty">0</b><small>Expiring soon</small></div></div>
 <div class="section"><h2>🧹 Cleaning Planner</h2><div class="form"><input id="cleanTitle" placeholder="Cleaning task"><select id="cleanFreq" onchange="updateCleanScheduleOptions()"><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Custom</option></select><select id="cleanDay" aria-label="Day or schedule"></select><button class="action" id="cleanBtn" onclick="saveCleaning()">Add</button></div><div class="form simple"><input id="cleanPerson" placeholder="Assigned to (optional)"><input id="cleanNotes" placeholder="Notes (optional)"></div><div id="cleanRows"></div><div class="note">Choose a day or repeating schedule. Marking a task Done records its completion while keeping it on the planner.</div></div>
-<div class="section"><h2>🔧 Home Maintenance</h2><div class="form"><input id="careTitle" placeholder="Maintenance item"><input id="careDue" type="date"><select id="careStatus"><option>To do</option><option>Booked</option><option>Done</option></select><button class="action" id="careAddBtn" onclick="saveCare()">Add</button></div><div class="form"><select id="careFreq"><option>One-off</option><option>Monthly</option><option>Every 3 months</option><option>Every 6 months</option><option>Yearly</option></select><input id="careLast" type="date" aria-label="Last done"><input id="careNotes" placeholder="Notes (optional)"><span></span></div><div id="careRows"></div></div>
-<div class="section"><h2>📦 Home Inventory & Important Info</h2><div class="form"><input id="invName" placeholder="Item / appliance"><input id="invPurchase" type="date"><input id="invWarranty" type="date"><button class="action" id="invBtn" onclick="saveInventory()">Add</button></div><div class="form simple"><input id="invModel" placeholder="Model / serial (optional)"><input id="invNotes" placeholder="Notes (optional)"></div><div id="invRows"></div><div class="note">Warranty dates approaching within 30 days can appear in Dashboard reminders.</div></div>
+<div class="section"><h2>🔧 Home Maintenance</h2><div class="form"><input id="careTitle" placeholder="Maintenance item"><input id="careLast" type="date" data-fcc-date="1" aria-label="Last serviced" title="Last serviced"><select id="careStatus"><option>To do</option><option>Booked</option><option>Done</option></select><select id="careFreq"><option>One-off</option><option>Monthly</option><option>Every 3 months</option><option>Every 6 months</option><option>Yearly</option></select></div><div class="form"><input id="careDue" type="date" data-fcc-date="1" aria-label="Next service" title="Next service"><input id="careProvider" placeholder="Service provider / contact"><input id="careCost" type="number" step="0.01" placeholder="Cost"><input id="careNotes" placeholder="Notes (optional)"></div><button class="action" id="careAddBtn" onclick="saveCare()" style="width:100%;margin:4px 0 14px">Add maintenance</button><div id="careRows"></div></div>
+<div class="section"><h2>📦 Home Inventory & Important Info</h2><div class="form"><input id="invName" placeholder="Item / appliance"><input id="invPurchase" type="date" data-fcc-date="1"><input id="invWarranty" type="date" data-fcc-date="1"><button class="action" id="invBtn" onclick="saveInventory()">Add</button></div><div class="form simple"><input id="invModel" placeholder="Model / serial (optional)"><input id="invNotes" placeholder="Notes (optional)"></div><div id="invRows"></div><div class="note">Warranty dates approaching within 30 days can appear in Dashboard reminders.</div></div>
 </div>
 <div id="finance" class="page"><div class="section"><h2>€ Family Finance PRO</h2><p class="note">Income, expenses, bills, budget, savings goals and reports — all connected to your dashboard.</p></div><div class="grid"><div class="card kpi"><span>INCOME</span><b id="incomeKpi">—</b></div><div class="card kpi"><span>EXPENSES</span><b id="expenseKpi">—</b></div><div class="card kpi"><span>BILLS DUE</span><b id="billsKpi">—</b></div><div class="card kpi"><span>BALANCE</span><b id="finBalance">—</b></div></div>
 <div class="finance-tabs" id="financeTabs"><button class="active" onclick="showFin('transactions',this)">Transactions</button><button onclick="showFin('bills',this)">Bills</button><button onclick="showFin('budgetpro',this)">Budget</button><button onclick="showFin('savings',this)">Savings Goals</button><button onclick="showFin('reports',this)">Reports</button></div>
 <div id="fin-transactions" class="finpanel active"><div class="section"><h2>Income & Expenses</h2>
 <div class="form" style="margin-bottom:12px"><input id="financeMonth" type="month" onchange="syncFinancePeriod(this.value)" aria-label="Finance month"></div>
-<div class="form"><input id="txDesc" placeholder="Description"><input id="txAmount" type="number" step="0.01" placeholder="Amount"><select id="txType"><option>Expense</option><option>Income</option></select><select id="txCategory"><option>Groceries</option><option>Utilities</option><option>Transport</option><option>School & Kids</option><option>Home</option><option>Family & Personal</option><option>Salary</option><option>Other</option></select><button class="action" onclick="addTx()">Add</button></div><div id="txRows"></div></div></div>
-<div id="fin-bills" class="finpanel"><div class="section"><h2>Bills & Payments</h2><div class="form" style="margin-bottom:12px"><input id="billMonth" type="month" onchange="syncBillMonth(this.value)" aria-label="Bills month"></div><div class="form"><input id="billName" placeholder="Bill"><input id="billAmount" type="number" step="0.01" placeholder="Amount"><input id="billDue" type="date"><button class="action" onclick="addBill()">Add</button></div><div id="billRows"></div></div></div>
+<div class="form"><input id="txDesc" placeholder="Description"><input id="txAmount" type="number" step="0.01" placeholder="Amount"><select id="txType"><option>Expense</option><option>Income</option></select><select id="txCategory"><option>Groceries</option><option>Utilities</option><option>Transport</option><option>School & Kids</option><option>Home</option><option>Family & Personal</option><option>Salary</option><option>Other</option></select><button class="action" id="txAddBtn" onclick="addTx()">Add</button></div><div id="txRows"></div></div></div>
+<div id="fin-bills" class="finpanel"><div class="section"><h2>Bills & Payments</h2><div class="form" style="margin-bottom:12px"><input id="billMonth" type="month" onchange="syncBillMonth(this.value)" aria-label="Bills month"></div><div class="form"><input id="billName" placeholder="Bill"><input id="billAmount" type="number" step="0.01" placeholder="Amount"><input id="billDue" type="date" data-fcc-date="1"><button class="action" id="billAddBtn" onclick="addBill()">Add</button></div><div id="billRows"></div></div></div>
 <div id="fin-budgetpro" class="finpanel"><div class="section"><h2>Monthly Budget</h2><div class="form"><select id="budgetCat"><option>Groceries</option><option>Utilities</option><option>Transport</option><option>School & Kids</option><option>Home</option><option>Family & Personal</option><option>Other</option></select><input id="budgetAmount" type="number" step="0.01" placeholder="Monthly budget"><span></span><button class="action" onclick="setBudget()">Save</button></div><div id="budgetRows"></div></div></div>
-<div id="fin-savings" class="finpanel"><div class="section"><h2>Savings Goals</h2><div class="form"><input id="goalName" placeholder="Goal name"><input id="goalTarget" type="number" step="0.01" placeholder="Target"><input id="goalSaved" type="number" step="0.01" placeholder="Saved so far"><button class="action" onclick="addGoal()">Add Goal</button></div><div class="goal-grid" id="goalRows"></div></div></div>
+<div id="fin-savings" class="finpanel"><div class="section"><h2>Savings Goals</h2><div class="form"><input id="goalName" placeholder="Goal name"><input id="goalTarget" type="number" step="0.01" placeholder="Target"><input id="goalSaved" type="number" step="0.01" placeholder="Saved so far"><input id="goalDeadline" type="date" data-fcc-date="1" aria-label="Target date" title="Target date"><button class="action" id="goalAddBtn" onclick="addGoal()">Add Goal</button></div><div class="goal-grid" id="goalRows"></div></div></div>
 <div id="fin-reports" class="finpanel"><div class="section"><h2>📊 Reports</h2><div class="report-switch"><button id="monthlyReportBtn" class="active" onclick="setReportMode('monthly')">Monthly</button><button id="annualReportBtn" onclick="setReportMode('annual')">Annual</button></div><div class="report-controls"><select id="reportMonth" onchange="syncReportPeriod()"></select><select id="reportYear" onchange="syncReportPeriod()"></select></div><div id="monthlyReport">
 <div class="grid" id="monthlyReportKpis">
   <div class="card kpi"><span>MONTHLY INCOME</span><b id="monthlyIncomeKpi">—</b></div>
@@ -138,10 +146,12 @@ body::after{content:none !important}
 <h3 style="margin-top:24px">💶 Currency & Date</h3><div class="form simple"><select id="settingsCurrency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select><select id="settingsDateFmt"><option value="us">Sep 9, 2026</option><option value="eu">09-Sep-2026</option><option value="iso">2026-09-09</option></select></div>
 <h3 style="margin-top:24px">🎨 Theme</h3><p class="note">Automatic follows the current season. Or choose any special theme whenever you like.</p><div class="form simple"><select id="themeMode" onchange="setThemeMode(this.value)"><option value="auto">✨ Automatic — Follow the season</option><option value="manual">🎨 Manual selection</option></select><button class="action" onclick="applyAutoTheme()">Apply now</button></div><div class="theme-gallery" id="themeGallery"></div><div class="season-note" id="themeNote"></div>
 </div>
-<div class="section"><h2>💾 Backup & Data</h2><p class="note">Your information stays in this browser using local storage. Export a backup before clearing browser data or moving to another device.</p><div class="settings-actions"><button class="action" onclick="exportData()">⬇ Export backup</button><label class="ghost settings-import">⬆ Import backup<input id="backupImport" type="file" accept="application/json,.json" onchange="importDataFile(this)" hidden></label></div><div id="backupStatus" class="season-note" style="display:none"></div><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button class="ghost danger" onclick="resetDemo()">Reset demo data</button><div class="note">Reset restores the original demo content. It does not change your currency, date format, family name or theme.</div></div>
+<div class="section"><h2>💾 Backup & Data</h2><p class="note">Your information stays in this browser using local storage. Export a backup before clearing browser data or moving to another device.</p><div class="settings-actions"><button class="action" onclick="exportData()">⬇ Export backup</button><label class="ghost settings-import">⬆ Import backup<input id="backupImport" type="file" accept="application/json,.json" onchange="importDataFile(this)" hidden></label></div><div id="backupStatus" class="season-note" style="display:none"></div><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button class="ghost danger" onclick="resetDemo()">Load sample data</button><div class="note">Loads the original sample content for preview/testing. It does not change your currency, date format, family name or theme.</div></div>
 </div>
 </main></div><script>
-const $=id=>document.getElementById(id),KEY='fccProDataV7';const demo={tasks:[{t:'Book dentist',d:'2026-09-12',p:'High'},{t:'Buy school supplies',d:'2026-09-04',p:'Normal'},{t:'Call plumber',d:'',p:'Normal'}],events:[{t:'School pickup',d:'2026-09-01',time:'15:30'},{t:'Football',d:'2026-09-02',time:'17:00'},{t:'Grocery run',d:'2026-09-03',time:'18:00'},{t:'Family movie night',d:'2026-09-05',time:'20:00'}],care:[{t:'Air-con service',d:'2026-09-18',s:'To do'},{t:'Water filter',d:'2026-10-10',s:'To do'}],tx:[{d:'Salary 1',a:2200,type:'Income'},{d:'Salary 2',a:2600,type:'Income'},{d:'Freelance',a:350,type:'Income'},{d:'Supermarket',a:126.4,type:'Expense'},{d:'Petrol',a:60,type:'Expense'},{d:'School supplies',a:48.9,type:'Expense'},{d:'Takeaway',a:32.5,type:'Expense'},{d:'Internet',a:42,type:'Expense'},{d:'Streaming',a:12.99,type:'Expense'},{d:'Mortgage / Rent',a:1450,type:'Expense'},{d:'Groceries & household',a:760,type:'Expense'},{d:'Utilities & insurance',a:610,type:'Expense'},{d:'School & activities',a:430,type:'Expense'},{d:'Transport & car',a:360.71,type:'Expense'},{d:'Family & personal',a:263,type:'Expense'}],bills:[{n:'Water supply',a:54.6,d:'2026-09-09',paid:false},{n:'Tutoring',a:80,d:'2026-09-30',paid:false},{n:'Electricity',a:120,d:'2026-09-20',paid:false},{n:'Internet',a:42,d:'2026-09-05',paid:true}],meals:{Mon:'Chicken wraps + salad',Tue:'Pasta night',Wed:'Homemade pizza',Thu:'Rice bowls',Fri:'Taco night'}};let data=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(demo);data.budgets=data.budgets||{Groceries:900,Utilities:700,Transport:450,'School & Kids':500,Home:1600,'Family & Personal':400,Other:250};
+const $=id=>document.getElementById(id),KEY='fccProDataV7_6_QA';
+// Onboarding key must exist before any startup migration checks use it.
+const FCC_ONBOARD_KEY='fccOnboardingV681';const demo={tasks:[{t:'Book dentist',d:'2026-09-12',p:'High'},{t:'Buy school supplies',d:'2026-09-04',p:'Normal'},{t:'Call plumber',d:'',p:'Normal'}],events:[{t:'School pickup',d:'2026-09-01',time:'15:30'},{t:'Football',d:'2026-09-02',time:'17:00'},{t:'Grocery run',d:'2026-09-03',time:'18:00'},{t:'Family movie night',d:'2026-09-05',time:'20:00'}],care:[{t:'Air-con service',d:'2026-09-18',s:'To do'},{t:'Water filter',d:'2026-10-10',s:'To do'}],tx:[{d:'Salary 1',a:2200,type:'Income'},{d:'Salary 2',a:2600,type:'Income'},{d:'Freelance',a:350,type:'Income'},{d:'Supermarket',a:126.4,type:'Expense'},{d:'Petrol',a:60,type:'Expense'},{d:'School supplies',a:48.9,type:'Expense'},{d:'Takeaway',a:32.5,type:'Expense'},{d:'Internet',a:42,type:'Expense'},{d:'Streaming',a:12.99,type:'Expense'},{d:'Mortgage / Rent',a:1450,type:'Expense'},{d:'Groceries & household',a:760,type:'Expense'},{d:'Utilities & insurance',a:610,type:'Expense'},{d:'School & activities',a:430,type:'Expense'},{d:'Transport & car',a:360.71,type:'Expense'},{d:'Family & personal',a:263,type:'Expense'}],bills:[{n:'Water supply',a:54.6,d:'2026-09-09',paid:false},{n:'Tutoring',a:80,d:'2026-09-30',paid:false},{n:'Electricity',a:120,d:'2026-09-20',paid:false},{n:'Internet',a:42,d:'2026-09-05',paid:true}],meals:{Mon:'Chicken wraps + salad',Tue:'Pasta night',Wed:'Homemade pizza',Thu:'Rice bowls',Fri:'Taco night'}};let data=JSON.parse(localStorage.getItem(KEY)||'null')||{tasks:[],events:[],care:[],tx:[],bills:[],meals:{},grocery:[],cleaning:[],inventory:[],goals:[],budgets:{Groceries:0,Utilities:0,Transport:0,'School & Kids':0,Home:0,'Family & Personal':0,Other:0}};data.budgets=data.budgets||{Groceries:0,Utilities:0,Transport:0,'School & Kids':0,Home:0,'Family & Personal':0,Other:0};
 const FCC_CATEGORY_MAP={
 'Supermarket':'Groceries','Groceries & household':'Groceries',
 'Internet':'Utilities','Utilities & insurance':'Utilities',
@@ -163,6 +173,7 @@ if(Array.isArray(data.tx)){
 
 // ---- Maria Test™ 2026 dated annual dataset ----
 (function(){
+  if(localStorage.getItem(FCC_ONBOARD_KEY)!=='1') return;
   const flag='fccAnnualMariaTest2026_v3';
   if(localStorage.getItem(flag)) return;
   const rows=[
@@ -186,6 +197,7 @@ if(Array.isArray(data.tx)){
 
 // ---- Complete 2026 annual bills demo dataset (one-time migration) ----
 (function(){
+  if(localStorage.getItem(FCC_ONBOARD_KEY)!=='1') return;
   const flag='fccAnnualBills2026_v1';
   if(localStorage.getItem(flag)) return;
   if(!Array.isArray(data.bills)) data.bills=[];
@@ -207,10 +219,33 @@ if(Array.isArray(data.tx)){
   localStorage.setItem(flag,'1');
 })();
 
-data.goals=data.goals||[{n:'Emergency Fund',target:5000,saved:1800},{n:'Family Holiday',target:2500,saved:650}];data.cleaning=data.cleaning||[];data.inventory=data.inventory||[];data.care=data.care||[];data.tasks=(data.tasks||[]).map(x=>({...x,done:!!x.done,notes:x.notes||''}));data.events=(data.events||[]).map(x=>({...x,notes:x.notes||''}));function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+data.goals=(data.goals||[]).map(g=>({...g,deadline:g.deadline||''}));data.cleaning=data.cleaning||[];data.inventory=data.inventory||[];data.care=(data.care||[]).map(x=>({...x,provider:x.provider||'',cost:Number(x.cost||0),history:Array.isArray(x.history)?x.history:[]}));data.tasks=(data.tasks||[]).map(x=>({...x,done:!!x.done,notes:x.notes||''}));data.events=(data.events||[]).map(x=>({...x,notes:x.notes||''}));function save(){persistAndRender()}
 const pages=[['dashboard','⌂ Dashboard'],['calendar','▣ Calendar'],['tasks','✓ Tasks'],['home','⌂ Home Care'],['finance','€ Finance'],['meals','🍴 Meals'],['settings','⚙ Settings']];pages.forEach((p,i)=>{let b=document.createElement('button');b.textContent=p[1];b.className=i?'':'active';b.onclick=()=>{document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(p[0]).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')};$('nav').appendChild(b)});
 const THEMES=[['spring','🌸','Spring'],['summer','☀️','Summer'],['autumn','🍂','Autumn'],['winter','❄️','Winter'],['valentine','💘','Valentine’s'],['easter','🐣','Easter'],['halloween','🎃','Halloween'],['christmas','🎄','Christmas']];let themeMode=localStorage.getItem('fccThemeMode')||'auto',currentTheme=localStorage.getItem('fccSeasonTheme')||'spring';function autoTheme(){let d=new Date(),m=d.getMonth()+1,day=d.getDate();if(m===2&&day>=7&&day<=16)return'valentine';if((m===3&&day>=20)||m===4)return'easter';if(m===10&&day>=20)return'halloween';if(m===12&&day>=1&&day<=31)return'christmas';if([3,4,5].includes(m))return'spring';if([6,7,8].includes(m))return'summer';if([9,10,11].includes(m))return'autumn';return'winter'}function applyTheme(t){THEMES.forEach(x=>document.body.classList.remove('season-'+x[0],'special-'+x[0]));document.body.classList.add((['spring','summer','autumn','winter'].includes(t)?'season-':'special-')+t);currentTheme=t;localStorage.setItem('fccSeasonTheme',t);document.querySelectorAll('.theme-choice').forEach(x=>x.classList.toggle('active',x.dataset.theme===t));let meta=THEMES.find(x=>x[0]===t);if($('themeNote'))$('themeNote').innerHTML='<b>'+meta[1]+' '+meta[2]+' theme</b> · Your family data stays exactly the same — only the atmosphere changes.'}function setThemeMode(v){themeMode=v;localStorage.setItem('fccThemeMode',v);if(v==='auto')applyAutoTheme()}function applyAutoTheme(){themeMode='auto';localStorage.setItem('fccThemeMode','auto');if($('themeMode'))$('themeMode').value='auto';applyTheme(autoTheme())}function chooseTheme(t){themeMode='manual';localStorage.setItem('fccThemeMode','manual');if($('themeMode'))$('themeMode').value='manual';applyTheme(t)}function buildThemeGallery(){if(!$('themeGallery'))return;$('themeGallery').innerHTML=THEMES.map(x=>`<button class="theme-choice" data-theme="${x[0]}" onclick="chooseTheme('${x[0]}')"><span>${x[1]}</span>${x[2]}</button>`).join('');$('themeMode').value=themeMode;applyTheme(themeMode==='auto'?autoTheme():currentTheme)}function toggleTheme(){let i=THEMES.findIndex(x=>x[0]===currentTheme);chooseTheme(THEMES[(i+1)%THEMES.length][0])}setTimeout(buildThemeGallery,0);
-function symbol(c){return {USD:'$',EUR:'€',GBP:'£',CAD:'C$',AUD:'A$',CHF:'CHF ',JPY:'¥',INR:'₹',NZD:'NZ$',SGD:'S$'}[c]||c+' '}function money(v){return symbol($('currency').value)+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}function fmt(d){if(!d||typeof d!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d))return 'No due date';let x=new Date(d+'T12:00:00');if(Number.isNaN(x.getTime()))return 'No due date';if($('datefmt').value==='iso')return d;if($('datefmt').value==='eu')return String(x.getDate()).padStart(2,'0')+'-'+x.toLocaleString('en',{month:'short'})+'-'+x.getFullYear();return x.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function symbol(c){return {USD:'$',EUR:'€',GBP:'£',CAD:'C$',AUD:'A$',CHF:'CHF ',JPY:'¥',INR:'₹',NZD:'NZ$',SGD:'S$'}[c]||c+' '}function money(v){return symbol($('currency').value)+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}function fmt(d){if(!d||typeof d!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d))return 'No due date';let x=new Date(d+'T12:00:00');if(Number.isNaN(x.getTime()))return 'No due date';if($('datefmt').value==='iso')return d;if($('datefmt').value==='eu')return String(x.getDate()).padStart(2,'0')+'/'+String(x.getMonth()+1).padStart(2,'0')+'/'+x.getFullYear();return String(x.getMonth()+1).padStart(2,'0')+'/'+String(x.getDate()).padStart(2,'0')+'/'+x.getFullYear()}
+
+function parseDisplayDate(v){
+  v=String(v||'').trim(); if(!v)return'';
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;
+  let m;
+  if($('datefmt').value==='eu'){
+    m=v.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/); if(!m)return'';
+    return `${m[3]}-${String(+m[2]).padStart(2,'0')}-${String(+m[1]).padStart(2,'0')}`;
+  }
+  if($('datefmt').value==='us'){
+    m=v.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/); if(!m)return'';
+    return `${m[3]}-${String(+m[1]).padStart(2,'0')}-${String(+m[2]).padStart(2,'0')}`;
+  }
+  return /^\d{4}-\d{2}-\d{2}$/.test(v)?v:'';
+}
+function displayDateFromISO(v){ if(!v)return''; return fmt(v)==='No due date'?'':fmt(v); }
+function readDate(id){ const el=$(id); if(!el)return ''; return el.type==='date'?el.value:parseDisplayDate(el.value); }
+function writeDate(id,iso){ const el=$(id); if(el)el.value=(el.type==='date'?(iso||''):displayDateFromISO(iso)); }
+function updateDateFieldPlaceholders(){
+  const p=$('datefmt').value==='eu'?'DD/MM/YYYY':$('datefmt').value==='us'?'MM/DD/YYYY':'YYYY-MM-DD';
+  document.querySelectorAll('[data-fcc-date="1"]').forEach(el=>{if(el.type!=='date')el.placeholder=p;});
+}
+
 $('currency').value=localStorage.getItem('fccCurrency')||'EUR';$('datefmt').value=localStorage.getItem('fccDateFmt')||'eu';
 function updateLiveDateSelector(){
   const sel=$('datefmt'); if(!sel)return;
@@ -223,49 +258,77 @@ function updateLiveDateSelector(){
   Array.from(sel.options).forEach(o=>o.textContent=labels[o.value]);
 }
 updateLiveDateSelector();
-$('currency').onchange=()=>{localStorage.setItem('fccCurrency',$('currency').value);render()};
-$('datefmt').onchange=()=>{localStorage.setItem('fccDateFmt',$('datefmt').value);updateLiveDateSelector();render()};
+function syncDashboardControls(){
+ const today=localISODate();
+ const savedCur=localStorage.getItem('fccCurrency')||($('currency')?$('currency').value:'EUR')||'EUR';
+ const savedFmt=localStorage.getItem('fccDateFmt')||($('datefmt')?$('datefmt').value:'eu')||'eu';
+ if($('currency')) $('currency').value=savedCur; if($('datefmt')) $('datefmt').value=savedFmt;
+ if($('dashboardCurrency')) $('dashboardCurrency').textContent=savedCur;
+ if($('dashboardDate')) $('dashboardDate').textContent=fmt(today);
+ const lang=$('datefmt').value==='eu'?'en-GB':$('datefmt').value==='us'?'en-US':'sv-SE';
+ document.querySelectorAll('input[type="date"]').forEach(el=>el.setAttribute('lang',lang));
+}
+$('currency').onchange=()=>{localStorage.setItem('fccCurrency',$('currency').value);syncDashboardControls();render()};
+$('datefmt').onchange=()=>{localStorage.setItem('fccDateFmt',$('datefmt').value);updateLiveDateSelector();syncDashboardControls();render()};
 setInterval(updateLiveDateSelector,60000);
 function del(arr,i){data[arr].splice(i,1);save()}
-function addTask(){let t=$('newTask').value.trim();if(!t)return;data.tasks.push({t,d:$('taskDue').value,p:$('taskPriority').value,notes:$('taskNotes').value.trim(),done:false});$('newTask').value='';$('taskDue').value='';$('taskNotes').value='';save()}
+function addTask(){let t=$('newTask').value.trim();if(!t)return;data.tasks.push({t,d:readDate('taskDue'),p:$('taskPriority').value,notes:$('taskNotes').value.trim(),done:false});$('newTask').value='';$('taskDue').value='';$('taskNotes').value='';save()}
 function toggleTask(i){data.tasks[i].done=!data.tasks[i].done;save()}
 function normalizeTaskDate(v){v=String(v||'').trim();if(!v)return '';v=v.replace(/[\/.]/g,'-');let m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);if(!m)return null;let y=+m[1],mo=+m[2],d=+m[3],dt=new Date(y,mo-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==mo-1||dt.getDate()!==d)return null;return `${m[1]}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`}function editTask(i){let x=data.tasks[i],t=prompt('Task:',x.t);if(t===null)return;t=t.trim();if(!t)return;let raw=prompt('Due date (YYYY-MM-DD or YYYY/MM/DD):',x.d||'');if(raw===null)return;let d=normalizeTaskDate(raw);if(d===null){alert('Please enter a valid date, e.g. 2026-09-02 or 2026/09/02.');return}let n=prompt('Notes:',x.notes||'');if(n===null)return;x.t=t;x.d=d;x.notes=n.trim();save()}
-function addEvent(){let t=$('eventTitle').value.trim();if(!t)return;data.events.push({t,d:$('eventDate').value,time:$('eventTime').value,notes:$('eventNotes').value.trim()});$('eventTitle').value='';$('eventDate').value='';$('eventTime').value='';$('eventNotes').value='';save()}
+function addEvent(){let t=$('eventTitle').value.trim();if(!t)return;data.events.push({t,d:readDate('eventDate'),time:$('eventTime').value,notes:$('eventNotes').value.trim()});$('eventTitle').value='';$('eventDate').value='';$('eventTime').value='';$('eventNotes').value='';save()}
 function editEvent(i){let x=data.events[i],t=prompt('Event:',x.t);if(t===null)return;t=t.trim();if(!t)return;let d=prompt('Date (YYYY-MM-DD):',x.d||'');if(d===null)return;let tm=prompt('Time (HH:MM):',x.time||'');if(tm===null)return;let n=prompt('Notes:',x.notes||'');if(n===null)return;x.t=t;x.d=d.trim();x.time=tm.trim();x.notes=n.trim();save()}
 let careEditIndex=null,cleanEditIndex=null,invEditIndex=null;
 function addMonthsISO(d,n){if(!d)return'';let x=new Date(d+'T12:00:00'),day=x.getDate();x.setDate(1);x.setMonth(x.getMonth()+n);let last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();x.setDate(Math.min(day,last));return localISODate(x)}
 function nextCareDate(last,f){if(!last)return'';return f==='Monthly'?addMonthsISO(last,1):f==='Every 3 months'?addMonthsISO(last,3):f==='Every 6 months'?addMonthsISO(last,6):f==='Yearly'?addMonthsISO(last,12):''}
-function saveCare(){let t=$('careTitle').value.trim();if(!t)return;let last=$('careLast').value,f=$('careFreq').value,d=$('careDue').value||nextCareDate(last,f);let item={t,d,s:$('careStatus').value,notes:$('careNotes').value.trim(),freq:f,last};if(careEditIndex===null)data.care.push(item);else{data.care[careEditIndex]=item;careEditIndex=null}['careTitle','careDue','careLast','careNotes'].forEach(id=>$(id).value='');$('careStatus').value='To do';$('careFreq').value='One-off';$('careAddBtn').textContent='Add';save()}
-function setCareStatus(i,s){data.care[i].s=s;if(s==='Done'){data.care[i].last=localISODate();let nd=nextCareDate(data.care[i].last,data.care[i].freq);if(nd){data.care[i].d=nd;data.care[i].s='To do'}}save()}
-function editCare(i){let x=data.care[i];careEditIndex=i;$('careTitle').value=x.t||'';$('careDue').value=x.d||'';$('careStatus').value=x.s||'To do';$('careFreq').value=x.freq||'One-off';$('careLast').value=x.last||'';$('careNotes').value=x.notes||'';$('careAddBtn').textContent='Save changes';$('careTitle').scrollIntoView({behavior:'smooth',block:'center'});$('careTitle').focus()}
-function cleanScheduleFromOld(x){if(x.schedule)return x.schedule;if(x.d){let dt=new Date(x.d+'T12:00:00'),day=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dt.getDay()];if(x.f==='Daily')return 'Every day';if(x.f==='Weekly')return day;if(x.f==='Monthly'){let n=Math.ceil(dt.getDate()/7);return (n>=5?'Last':['','1st','2nd','3rd','4th'][n])+' '+day}}return x.f==='Daily'?'Every day':x.f==='Custom'?'As needed':'Monday'}
-function updateCleanScheduleOptions(selected){let f=$('cleanFreq').value,el=$('cleanDay'),days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],opts=[];if(f==='Daily')opts=['Every day'];else if(f==='Weekly')opts=days;else if(f==='Monthly'){['1st','2nd','3rd','4th','Last'].forEach(w=>days.forEach(d=>opts.push(w+' '+d)))}else opts=['As needed','Weekdays','Weekends','Twice a week'];el.innerHTML=opts.map(v=>`<option${v===selected?' selected':''}>${v}</option>`).join('');if(selected&&!opts.includes(selected)){let o=document.createElement('option');o.textContent=selected;o.value=selected;o.selected=true;el.appendChild(o)}}
+function saveCare(){
+ let t=$('careTitle').value.trim();if(!t)return;
+ let last=$('careLast').value,f=$('careFreq').value,d=$('careDue').value||nextCareDate(last,f);
+ let old=careEditIndex===null?null:data.care[careEditIndex];
+ let item={t,d,s:$('careStatus').value,notes:$('careNotes').value.trim(),freq:f,last,provider:$('careProvider').value.trim(),cost:parseFloat($('careCost').value||0)||0,history:(old&&Array.isArray(old.history))?old.history:[]};
+ if(item.s==='Done'&&last){let sig=last+'|'+item.cost+'|'+item.provider;if(!item.history.some(h=>(h.date+'|'+Number(h.cost||0)+'|'+(h.provider||''))===sig))item.history.push({date:last,cost:item.cost,provider:item.provider,notes:item.notes});}
+ if(careEditIndex===null)data.care.push(item);else{data.care[careEditIndex]=item;careEditIndex=null}
+ ['careTitle','careDue','careLast','careProvider','careCost','careNotes'].forEach(id=>$(id).value='');$('careStatus').value='To do';$('careFreq').value='One-off';$('careAddBtn').textContent='Add maintenance';save()
+}
+function setCareStatus(i,s){
+ let x=data.care[i];x.s=s;
+ if(s==='Done'){
+   x.last=localISODate();if(!Array.isArray(x.history))x.history=[];
+   x.history.push({date:x.last,cost:Number(x.cost||0),provider:x.provider||'',notes:x.notes||''});
+   let nd=nextCareDate(x.last,x.freq||'One-off');if(nd){x.d=nd;x.s='To do'}
+ }
+ save()
+}
+function editCare(i){let x=data.care[i];careEditIndex=i;$('careTitle').value=x.t||'';writeDate('careDue',x.d||'');$('careStatus').value=x.s||'To do';$('careFreq').value=x.freq||'One-off';writeDate('careLast',x.last||'');$('careProvider').value=x.provider||'';$('careCost').value=x.cost||'';$('careNotes').value=x.notes||'';$('careAddBtn').textContent='Save changes';$('careTitle').scrollIntoView({behavior:'smooth',block:'center'})}
 function saveCleaning(){let t=$('cleanTitle').value.trim();if(!t)return;let old=cleanEditIndex===null?null:data.cleaning[cleanEditIndex];let item={t,f:$('cleanFreq').value,schedule:$('cleanDay').value,person:$('cleanPerson').value.trim(),notes:$('cleanNotes').value.trim(),done:false,last:old?.last||''};if(cleanEditIndex===null)data.cleaning.push(item);else{data.cleaning[cleanEditIndex]=item;cleanEditIndex=null}['cleanTitle','cleanPerson','cleanNotes'].forEach(id=>$(id).value='');$('cleanFreq').value='Daily';updateCleanScheduleOptions();$('cleanBtn').textContent='Add';save()}
 function completeCleaning(i){let x=data.cleaning[i];x.last=localISODate();x.done=false;save()}
 function editCleaning(i){let x=data.cleaning[i];cleanEditIndex=i;$('cleanTitle').value=x.t||'';$('cleanFreq').value=x.f||'Weekly';updateCleanScheduleOptions(cleanScheduleFromOld(x));$('cleanPerson').value=x.person||'';$('cleanNotes').value=x.notes||'';$('cleanBtn').textContent='Save changes';$('cleanTitle').scrollIntoView({behavior:'smooth',block:'center'})}
-function saveInventory(){let n=$('invName').value.trim();if(!n)return;let item={n,purchase:$('invPurchase').value,warranty:$('invWarranty').value,model:$('invModel').value.trim(),notes:$('invNotes').value.trim()};if(invEditIndex===null)data.inventory.push(item);else{data.inventory[invEditIndex]=item;invEditIndex=null}['invName','invPurchase','invWarranty','invModel','invNotes'].forEach(id=>$(id).value='');$('invBtn').textContent='Add';save()}
-function editInventory(i){let x=data.inventory[i];invEditIndex=i;$('invName').value=x.n||'';$('invPurchase').value=x.purchase||'';$('invWarranty').value=x.warranty||'';$('invModel').value=x.model||'';$('invNotes').value=x.notes||'';$('invBtn').textContent='Save changes';$('invName').scrollIntoView({behavior:'smooth',block:'center'})}
+function saveInventory(){let n=$('invName').value.trim();if(!n)return;let item={n,purchase:readDate('invPurchase'),warranty:readDate('invWarranty'),model:$('invModel').value.trim(),notes:$('invNotes').value.trim()};if(invEditIndex===null)data.inventory.push(item);else{data.inventory[invEditIndex]=item;invEditIndex=null}['invName','invPurchase','invWarranty','invModel','invNotes'].forEach(id=>$(id).value='');$('invBtn').textContent='Add';save()}
+function editInventory(i){let x=data.inventory[i];invEditIndex=i;$('invName').value=x.n||'';writeDate('invPurchase',x.purchase||'');writeDate('invWarranty',x.warranty||'');$('invModel').value=x.model||'';$('invNotes').value=x.notes||'';$('invBtn').textContent='Save changes';$('invName').scrollIntoView({behavior:'smooth',block:'center'})}
 
+let txEditIndex=null,billEditIndex=null;
 function addTx(){
-  const desc=$('txDesc').value.trim();
-  const raw=String($('txAmount').value||'').replace(',','.');
-  const amount=parseFloat(raw);
-  const type=$('txType').value;
-  const category=$('txCategory').value;
-  if(!desc){alert('Please add a description.');$('txDesc').focus();return;}
-  if(!Number.isFinite(amount)||amount<=0){alert('Please enter a valid amount greater than 0.');$('txAmount').focus();return;}
-  if(!Array.isArray(data.tx)) data.tx=[];
-  const entryDate=autoTransactionDate();
-  data.tx.push({d:desc,a:amount,type:type,category:category,date:entryDate});
-  localStorage.setItem(KEY,JSON.stringify(data));
-  $('txDesc').value='';$('txAmount').value='';
-  if($('financeMonth'))$('financeMonth').value=entryDate.slice(0,7);
-  render();
-  const monthTx=data.tx.filter(x=>txDate(x).startsWith(entryDate.slice(0,7)));
-  const total=type==='Income'?monthTx.filter(x=>x.type==='Income').reduce((s,x)=>s+Number(x.a||0),0):monthTx.filter(x=>x.type==='Expense').reduce((s,x)=>s+Number(x.a||0),0);
-  const label=type==='Income'?'Monthly income':'Monthly expenses';
-  setTimeout(()=>alert(type+' added ✓\n'+label+': '+money(total)),30);
-}function addBill(){let n=$('billName').value.trim(),a=+$('billAmount').value;if(!n||!a)return;data.bills.push({n,a,d:$('billDue').value,paid:false});$('billName').value='';$('billAmount').value='';save()}function toggleBill(i){data.bills[i].paid=!data.bills[i].paid;save()}
+  const desc=$('txDesc').value.trim();const amount=parseFloat(String($('txAmount').value||'').replace(',','.'));const type=$('txType').value;const category=$('txCategory').value;
+  if(!desc){alert('Please add a description.');$('txDesc').focus();return;}if(!Number.isFinite(amount)||amount<=0){alert('Please enter a valid amount greater than 0.');$('txAmount').focus();return;}
+  if(!Array.isArray(data.tx))data.tx=[];let entryDate=txEditIndex===null?autoTransactionDate():(data.tx[txEditIndex].date||autoTransactionDate());let obj={d:desc,a:amount,type,category,date:entryDate};
+  if(txEditIndex===null)data.tx.push(obj);else{data.tx[txEditIndex]=obj;txEditIndex=null;$('txAddBtn').textContent='Add'}
+  $('txDesc').value='';$('txAmount').value='';save()
+}
+function editTx(i){let x=data.tx[i];txEditIndex=i;$('txDesc').value=x.d||'';$('txAmount').value=x.a||'';$('txType').value=x.type||'Expense';$('txCategory').value=x.category||'Other';$('txAddBtn').textContent='Save changes';$('txDesc').focus()}
+function addBill(){let n=$('billName').value.trim(),a=parseFloat($('billAmount').value),d=readDate('billDue');if(!n||!Number.isFinite(a)||a<=0)return;let old=billEditIndex===null?null:data.bills[billEditIndex];let obj={n,a,d,paid:old?!!old.paid:false};if(billEditIndex===null)data.bills.push(obj);else{data.bills[billEditIndex]=obj;billEditIndex=null;$('billAddBtn').textContent='Add'}$('billName').value='';$('billAmount').value='';$('billDue').value='';save()}
+function toggleBill(i){
+  const b=data.bills[i]; if(!b)return;
+  b.paid=!b.paid;
+  if(!b.id)b.id='bill_'+Date.now()+'_'+i;
+  if(!Array.isArray(data.tx))data.tx=[];
+  if(b.paid){
+    if(!data.tx.some(t=>t.billId===b.id))data.tx.push({d:b.n,a:Number(b.a||0),type:'Expense',category:'Bills & Utilities',date:b.d||localISODate(),billId:b.id,autoBill:true});
+  }else{
+    data.tx=data.tx.filter(t=>!(t.autoBill&&t.billId===b.id));
+  }
+  save();
+}
+function editBill(i){let x=data.bills[i];billEditIndex=i;$('billName').value=x.n||'';$('billAmount').value=x.a||'';writeDate('billDue',x.d||'');$('billAddBtn').textContent='Save changes';$('billName').focus()}
+function deleteBill(i){if(confirm('Delete this bill?')){data.bills.splice(i,1);billEditIndex=null;save()}}
 let editingMealKey=null;
 function normalizeMeals(){if(!data.meals)data.meals={};Object.keys(data.meals).forEach(day=>{let v=data.meals[day];if(typeof v==='string')data.meals[day]={Dinner:{meal:v,notes:''}};else if(v&&v.meal)data.meals[day]={Dinner:{meal:v.meal,notes:v.notes||''}}});data.grocery=data.grocery||[]}
 function mealObj(day,type){normalizeMeals();return data.meals[day]&&data.meals[day][type]||null}
@@ -331,8 +394,11 @@ btn.classList.add('active');
 if(id==='reports') renderReports(); else render();
 }
 function setBudget(){let c=$('budgetCat').value,a=parseFloat(String($('budgetAmount').value||'').replace(',','.'));if(!Number.isFinite(a)||a<0){alert('Please enter a valid budget amount.');return}data.budgets[c]=a;$('budgetAmount').value='';save()}
-function addGoal(){let n=$('goalName').value.trim(),t=parseFloat($('goalTarget').value),sv=parseFloat($('goalSaved').value||0);if(!n||!Number.isFinite(t)||t<=0){alert('Add a goal name and valid target.');return}data.goals.push({n,target:t,saved:Number.isFinite(sv)?Math.max(0,sv):0});$('goalName').value='';$('goalTarget').value='';$('goalSaved').value='';save()}
-function addToGoal(i){let raw=prompt('Amount to add to '+data.goals[i].n+':');if(raw===null)return;let a=parseFloat(String(raw).replace(',','.'));if(!Number.isFinite(a)||a<=0){alert('Please enter a valid amount greater than 0.');return}data.goals[i].saved=Number(data.goals[i].saved||0)+a;save()}function delGoal(i){if(confirm('Delete this savings goal?')){data.goals.splice(i,1);save()}}
+let goalEditIndex=null;
+function addGoal(){let n=$('goalName').value.trim(),t=parseFloat($('goalTarget').value),sv=parseFloat($('goalSaved').value||0),deadline=readDate('goalDeadline');if(!n||!Number.isFinite(t)||t<=0){alert('Add a goal name and valid target.');return}let obj={n,target:t,saved:Number.isFinite(sv)?Math.max(0,sv):0,deadline};if(goalEditIndex===null)data.goals.push(obj);else{data.goals[goalEditIndex]=obj;goalEditIndex=null;$('goalAddBtn').textContent='Add Goal'}$('goalName').value='';$('goalTarget').value='';$('goalSaved').value='';$('goalDeadline').value='';save()}
+function editGoal(i){let g=data.goals[i];goalEditIndex=i;$('goalName').value=g.n||'';$('goalTarget').value=g.target||'';$('goalSaved').value=g.saved||'';writeDate('goalDeadline',g.deadline||'');$('goalAddBtn').textContent='Save changes';$('goalName').focus()}
+function addToGoal(i){let raw=prompt('Amount to add to '+data.goals[i].n+':');if(raw===null)return;let a=parseFloat(String(raw).replace(',','.'));if(!Number.isFinite(a)||a<=0){alert('Please enter a valid amount greater than 0.');return}data.goals[i].saved=Number(data.goals[i].saved||0)+a;save()}
+function delGoal(i){if(confirm('Delete this savings goal?')){data.goals.splice(i,1);save()}}
 
 let reportMode='monthly';
 function localISODate(d=new Date()){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
@@ -394,7 +460,29 @@ function renderReports(){if(!$('reportYear'))return;let y=+$('reportYear').value
  let spending=months.map((x,i)=>({i,v:x.exp})),nonzero=spending.filter(x=>x.v>0),high=nonzero.length?nonzero.reduce((a,b)=>a.v>b.v?a:b):null,low=nonzero.length?nonzero.reduce((a,b)=>a.v<b.v?a:b):null,top=Object.entries(yearCats).sort((a,b)=>b[1]-a[1])[0],avg=yc.exp/12,best=months.map((x,i)=>({i,v:x.bal})).reduce((a,b)=>a.v>b.v?a:b);$('annualInsights').innerHTML=`<div class="insight"><small>Highest spending month</small><b>${high?months[high.i].n+' · '+money(high.v):'—'}</b></div><div class="insight"><small>Lowest spending month</small><b>${low?months[low.i].n+' · '+money(low.v):'—'}</b></div><div class="insight"><small>Top expense category</small><b>${top?top[0]+' · '+money(top[1]):'—'}</b></div><div class="insight"><small>Average monthly expenses</small><b>${money(avg)}</b></div><div class="insight"><small>Best savings month</small><b>${months[best.i].n+' · '+money(best.v)}</b></div>`;
  let paid=data.bills.filter(x=>(x.d||'').startsWith(String(y))&&x.paid),unpaid=data.bills.filter(x=>(x.d||'').startsWith(String(y))&&!x.paid),goalSaved=data.goals.reduce((s,g)=>s+Number(g.saved||0),0),goalTargets=data.goals.reduce((s,g)=>s+Number(g.target||0),0);$('annualExtra').innerHTML=`<div class="mini-stat"><span>Bills Paid (Year)</span><b>${paid.length}</b></div><div class="mini-stat"><span>Bills Due / Unpaid (Year)</span><b>${unpaid.length}</b></div><div class="mini-stat"><span>Savings Goals</span><b>${money(goalSaved)} / ${money(goalTargets)}</b></div><div class="mini-stat"><span>Goal Progress</span><b>${goalTargets?(goalSaved/goalTargets*100).toFixed(1):'0.0'}%</b></div>`;
 }
-function render(){
+
+function renderImmediateLists(){
+  try{
+    if($('taskList')) $('taskList').innerHTML=data.tasks.length?data.tasks.map((x,i)=>`<div class="row"><span><b>${x.done?'✓ ':''}${x.t}</b><br><span class="badge">${x.p} · ${fmt(x.d)}</span>${x.notes?`<br><small>${x.notes}</small>`:''}</span><span><button class="ghost" onclick="toggleTask(${i})">${x.done?'Reopen':'Done'}</button> <button class="ghost" onclick="editTask(${i})">Edit</button> <button class="ghost danger" onclick="del('tasks',${i})">×</button></span></div>`).join(''):'<div class="empty">All clear ✓</div>';
+    if($('calendarRows')) $('calendarRows').innerHTML=data.events.length?data.events.map((x,i)=>`<div class="row"><span><b>${x.t}</b><br><small>${fmt(x.d)} ${x.time||''}</small>${x.notes?`<br><small>${x.notes}</small>`:''}</span><span><button class="ghost" onclick="editEvent(${i})">Edit</button> <button class="ghost danger" onclick="del('events',${i})">×</button></span></div>`).join(''):'<div class="empty">No events yet</div>';
+    if($('cleanRows')) $('cleanRows').innerHTML=data.cleaning.length?data.cleaning.map((x,i)=>`<div class="row"><span><b>${x.t}</b><div class="home-meta">${x.f||''}${cleanScheduleFromOld(x)?' · '+cleanScheduleFromOld(x):''}${x.person?' · '+x.person:''}</div>${x.notes?`<small>${x.notes}</small>`:''}</span><span class="home-actions"><button class="ghost" onclick="completeCleaning(${i})">Done</button><button class="ghost" onclick="editCleaning(${i})">Edit</button><button class="ghost danger" onclick="del('cleaning',${i})">×</button></span></div>`).join(''):'<div class="empty">No cleaning tasks yet</div>';
+    if($('careRows')) $('careRows').innerHTML=data.care.length?data.care.map((x,i)=>`<div class="row"><span><b>${x.t}</b><div class="home-meta">${x.freq||'One-off'}${x.d?' · Next: '+fmt(x.d):''}${x.last?' · Last serviced: '+fmt(x.last):''}</div>${x.provider?`<small>Provider: ${x.provider}</small><br>`:''}${Number(x.cost||0)?`<small>Cost: ${money(x.cost)}</small><br>`:''}${x.notes?`<small>${x.notes}</small>`:''}</span><span class="home-actions"><select class="ghost" onchange="setCareStatus(${i},this.value)"><option${x.s==='To do'?' selected':''}>To do</option><option${x.s==='Booked'?' selected':''}>Booked</option><option${x.s==='Done'?' selected':''}>Done</option></select><button class="ghost" onclick="editCare(${i})">Edit</button><button class="ghost danger" onclick="del('care',${i})">×</button></span></div>`).join(''):'<div class="empty">No maintenance items yet</div>';
+    if($('invRows')) $('invRows').innerHTML=data.inventory.length?data.inventory.map((x,i)=>`<div class="row"><span><b>${x.n}</b><div class="home-meta">${x.purchase?'Purchased: '+fmt(x.purchase):''}${x.warranty?' · Warranty: '+fmt(x.warranty):''}</div>${x.model?`<small>${x.model}</small>`:''}${x.notes?`<br><small>${x.notes}</small>`:''}</span><span class="home-actions"><button class="ghost" onclick="editInventory(${i})">Edit</button><button class="ghost danger" onclick="del('inventory',${i})">×</button></span></div>`).join(''):'<div class="empty">No inventory items yet</div>';
+
+    const fm=($('financeMonth')&&$('financeMonth').value)||localISODate().slice(0,7);
+    if($('txRows')){let a=data.tx.map((x,i)=>({x,i})).filter(o=>txDate(o.x).startsWith(fm));$('txRows').innerHTML=a.length?a.map(({x,i})=>`<div class="row"><span>${x.d}<br><small>${fmt(txDate(x))}</small><br><span class="badge">${x.type}${x.category?' · '+x.category:''}</span></span><span><b>${x.type==='Expense'?'-':'+'}${money(x.a)}</b><br><button class="ghost" onclick="editTx(${i})">Edit</button> <button class="ghost danger" onclick="del('tx',${i})">×</button></span></div>`).join(''):'<div class="empty">No income or expenses for this month</div>';}
+    const bm=($('billMonth')&&$('billMonth').value)||fm;
+    if($('billRows')){let a=data.bills.map((x,i)=>({x,i})).filter(o=>(o.x.d||'').startsWith(bm));$('billRows').innerHTML=a.length?a.map(({x,i})=>`<div class="row"><span>${x.n}<br><small>${fmt(x.d)}</small></span><span><b>${money(x.a)}</b><br><button class="ghost" onclick="toggleBill(${i})">${x.paid?'Paid ✓':'Mark paid'}</button> <button class="ghost" onclick="editBill(${i})">Edit</button> <button class="ghost danger" onclick="deleteBill(${i})">×</button></span></div>`).join(''):'<div class="empty">No bills for this month</div>';}
+  }catch(e){console.error('Immediate list render failed',e)}
+}
+function persistAndRender(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+  try{syncDashboardControls();updateDateFieldPlaceholders()}catch(e){console.error('Header sync failed',e)}
+  try{render()}catch(e){console.error('Full render failed',e)}
+  renderImmediateLists();
+}
+
+function render(){syncDashboardControls();updateDateFieldPlaceholders();
 let fm=$('financeMonth')&&$('financeMonth').value?$('financeMonth').value:(($('datePick')&&$('datePick').value)?$('datePick').value.slice(0,7):localISODate().slice(0,7));
 if($('financeMonth')&&!$('financeMonth').value)$('financeMonth').value=fm;
 let financeTx=data.tx.filter(x=>txDate(x).startsWith(fm));
@@ -408,14 +496,14 @@ let ev=[...data.events].sort((a,b)=>((a.d||'')+(a.time||'')).localeCompare((b.d|
 let hcToday=localISODate(),hcTodayD=new Date(hcToday+'T12:00:00'),hcIn30=new Date(hcTodayD);hcIn30.setDate(hcIn30.getDate()+30);let hcIn30s=localISODate(hcIn30);
 let activeCare=data.care.filter(x=>x.s!=='Done'),activeClean=data.cleaning.filter(x=>!x.done);let dueDates=activeCare.map(x=>x.d).filter(Boolean);$('homeOverdue').textContent=dueDates.filter(d=>d<hcToday).length;$('homeDueSoon').textContent=dueDates.filter(d=>d>=hcToday&&d<=hcIn30s).length;$('homeCompleted').textContent=[...data.care.filter(x=>x.last&&x.last.slice(0,7)===hcToday.slice(0,7)),...data.cleaning.filter(x=>x.last&&x.last.slice(0,7)===hcToday.slice(0,7))].length;$('homeWarranty').textContent=data.inventory.filter(x=>x.warranty&&x.warranty>=hcToday&&x.warranty<=hcIn30s).length;
 $('cleanRows').innerHTML=data.cleaning.length?data.cleaning.map((x,i)=>`<div class="row" style="opacity:${x.done?.55:1}"><span><b>${x.done?'✓ ':''}${x.t}</b><div class="home-meta">${x.f}${cleanScheduleFromOld(x)?' · '+cleanScheduleFromOld(x):''}${x.person?' · '+x.person:''}</div>${x.notes?`<small>${x.notes}</small>`:''}</span><span class="home-actions"><button class="ghost" onclick="completeCleaning(${i})">Done</button><button class="ghost" onclick="editCleaning(${i})">Edit</button><button class="ghost danger" onclick="del('cleaning',${i})">×</button></span></div>`).join(''):'<div class="empty">No cleaning tasks yet</div>';
-let careSorted=[...data.care].sort((a,b)=>{if((a.s==='Done')!==(b.s==='Done'))return a.s==='Done'?1:-1;return(a.d||'9999').localeCompare(b.d||'9999')});$('careRows').innerHTML=careSorted.length?careSorted.map(x=>{let i=data.care.indexOf(x);return`<div class="row" style="opacity:${x.s==='Done'?.55:1}"><span><b>${x.s==='Done'?'✓ ':''}${x.t}</b><div class="home-meta">${x.freq||'One-off'}${x.d?' · Next: '+fmt(x.d):''}${x.last?' · Last: '+fmt(x.last):''}</div>${x.notes?`<small>${x.notes}</small>`:''}</span><span class="home-actions"><select class="ghost" onchange="setCareStatus(${i},this.value)"><option${x.s==='To do'?' selected':''}>To do</option><option${x.s==='Booked'?' selected':''}>Booked</option><option${x.s==='Done'?' selected':''}>Done</option></select><button class="ghost" onclick="editCare(${i})">Edit</button><button class="ghost danger" onclick="del('care',${i})">×</button></span></div>`}).join(''):'<div class="empty">No maintenance items yet</div>';
+let careSorted=[...data.care].sort((a,b)=>{if((a.s==='Done')!==(b.s==='Done'))return a.s==='Done'?1:-1;return(a.d||'9999').localeCompare(b.d||'9999')});$('careRows').innerHTML=careSorted.length?careSorted.map(x=>{let i=data.care.indexOf(x),hist=Array.isArray(x.history)?x.history:[];return`<div class="row" style="opacity:${x.s==='Done'?.55:1}"><span><b>${x.s==='Done'?'✓ ':''}${x.t}</b><div class="home-meta">${x.freq||'One-off'}${x.d?' · Next: '+fmt(x.d):''}${x.last?' · Last serviced: '+fmt(x.last):''}</div>${x.provider?`<small>Provider: ${x.provider}</small><br>`:''}${Number(x.cost||0)?`<small>Cost: ${money(x.cost)}</small><br>`:''}${x.notes?`<small>${x.notes}</small>`:''}${hist.length?`<details><summary>Service history (${hist.length})</summary>${hist.slice().reverse().map(h=>`<small>${fmt(h.date)}${h.provider?' · '+h.provider:''}${Number(h.cost||0)?' · '+money(h.cost):''}</small><br>`).join('')}</details>`:''}</span><span class="home-actions"><select class="ghost" onchange="setCareStatus(${i},this.value)"><option${x.s==='To do'?' selected':''}>To do</option><option${x.s==='Booked'?' selected':''}>Booked</option><option${x.s==='Done'?' selected':''}>Done</option></select><button class="ghost" onclick="editCare(${i})">Edit</button><button class="ghost danger" onclick="del('care',${i})">×</button></span></div>`}).join(''):'<div class="empty">No maintenance items yet</div>';
 $('invRows').innerHTML=data.inventory.length?data.inventory.map((x,i)=>`<div class="row"><span><b>${x.n}</b><div class="home-meta">${x.purchase?'Purchased: '+fmt(x.purchase):''}${x.warranty?' · Warranty: '+fmt(x.warranty):''}</div>${x.model?`<small>${x.model}</small>`:''}${x.notes?`<br><small>${x.notes}</small>`:''}</span><span class="home-actions"><button class="ghost" onclick="editInventory(${i})">Edit</button><button class="ghost danger" onclick="del('inventory',${i})">×</button></span></div>`).join(''):'<div class="empty">No inventory items yet</div>';
 let priorityTasks=data.tasks.filter(x=>!x.done).sort((a,b)=>(a.p==='High'?0:1)-(b.p==='High'?0:1)).slice(0,2);let homeReminders=[...activeCare.map(x=>({t:x.t,d:x.d,icon:'🔧'})),...data.inventory.filter(x=>x.warranty&&x.warranty>=hcToday&&x.warranty<=hcIn30s).map(x=>({t:x.n+' warranty',d:x.warranty,icon:'📦'}))].filter(x=>x.d).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,3);$('reminders').innerHTML=[...priorityTasks.map(x=>`<div class="row"><span>✓ ${x.t}</span><span class="pill">${x.p}${x.d?' · '+fmt(x.d):''}</span></div>`),...data.bills.filter(x=>!x.paid).slice(0,1).map(x=>`<div class="row"><span>💧 ${x.n}</span><span class="pill">${fmt(x.d)}</span></div>`),...homeReminders.map(x=>`<div class="row"><span>${x.icon} ${x.t}</span><span class="pill">${fmt(x.d)}</span></div>`)].join('');
 let visibleTx=data.tx.map((x,i)=>({x,i})).filter(o=>txDate(o.x).startsWith(fm));
-$('txRows').innerHTML=visibleTx.length?visibleTx.map(({x,i})=>`<div class="row"><span>${x.d}<br><small>${fmt(txDate(x))}</small><br><span class="badge">${x.type}${x.category?' · '+x.category:''}</span></span><span><b>${x.type==='Expense'?'-':'+'}${money(x.a)}</b> <button class="ghost danger" onclick="del('tx',${i})">×</button></span></div>`).join(''):'<div class="empty">No income or expenses for this month</div>';
+$('txRows').innerHTML=visibleTx.length?visibleTx.map(({x,i})=>`<div class="row"><span>${x.d}<br><small>${fmt(txDate(x))}</small><br><span class="badge">${x.type}${x.category?' · '+x.category:''}</span></span><span><b>${x.type==='Expense'?'-':'+'}${money(x.a)}</b><br><button class="ghost" onclick="editTx(${i})">Edit</button> <button class="ghost danger" onclick="del('tx',${i})">×</button></span></div>`).join(''):'<div class="empty">No income or expenses for this month</div>';
 let bm=($('billMonth')&&$('billMonth').value)||fm;if($('billMonth')&&!$('billMonth').value)$('billMonth').value=bm;
 let visibleBills=data.bills.map((x,i)=>({x,i})).filter(o=>(o.x.d||'').startsWith(bm));
-$('billRows').innerHTML=visibleBills.length?visibleBills.map(({x,i})=>`<div class="row"><span>${x.n}<br><small>${fmt(x.d)}</small></span><span><b>${money(x.a)}</b> <button class="ghost" onclick="toggleBill(${i})">${x.paid?'Paid ✓':'Mark paid'}</button></span></div>`).join(''):'<div class="empty">No bills for this month</div>';
+$('billRows').innerHTML=visibleBills.length?visibleBills.map(({x,i})=>`<div class="row"><span>${x.n}<br><small>${fmt(x.d)}</small></span><span><b>${money(x.a)}</b><br><button class="ghost" onclick="toggleBill(${i})">${x.paid?'Paid ✓':'Mark paid'}</button> <button class="ghost" onclick="editBill(${i})">Edit</button> <button class="ghost danger" onclick="deleteBill(${i})">×</button></span></div>`).join(''):'<div class="empty">No bills for this month</div>';
 if(activeFinPanel==='bills') setFinanceTopKpis(financeTx,visibleBills.map(o=>o.x));
 let days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],types=['Breakfast','Lunch','Dinner','Snack'];normalizeMeals();$('mealRows').innerHTML=days.map(d=>{let slots=types.map(t=>{let v=mealObj(d,t);return `<div class="meal-slot"><div class="meal-kind">${t}</div>${v?`<div class="meal-content"><div class="meal-name">${v.meal}</div>${v.notes?`<small class="meal-notes">${v.notes}</small>`:''}</div><div class="meal-actions"><button class="ghost" onclick="editMeal('${d}','${t}')">Edit</button><button class="ghost danger" onclick="deleteMeal('${d}','${t}')">Delete</button></div>`:`<div class="meal-empty">—</div>`}</div>`}).join('');return `<div class="meal-day" style="margin:18px 0 6px"><h3 style="margin:0">${d}</h3>${slots}</div>`}).join('');$('mealPreview').innerHTML=days.filter(d=>mealObj(d,'Dinner')).slice(0,5).map(d=>{let v=mealObj(d,'Dinner');return `<div class="row"><b>${d}</b><span>${v.meal}</span></div>`}).join('')||'<div class="empty">No dinners planned yet</div>';$('groceryRows').innerHTML=data.grocery.map((g,i)=>`<div class="row" style="opacity:${g.bought?.55:1}"><span><button class="ghost" onclick="toggleGrocery(${i})">${g.bought?'✓':'○'}</button> <b style="${g.bought?'text-decoration:line-through':''}">${g.item}</b><br><small>${g.cat}${g.qty?' · '+g.qty:''}</small></span><span><button class="ghost" onclick="editGrocery(${i})">Edit</button> <button class="ghost danger" onclick="deleteGrocery(${i})">Delete</button></span></div>`).join('')||'<div class="empty">Your grocery list is empty</div>';let cats=Object.keys(data.budgets);let spent={};
 const normalizeBudgetCategory=x=>{
@@ -424,7 +512,7 @@ const normalizeBudgetCategory=x=>{
   c=aliases[c]||c;
   return cats.includes(c)?c:'Other';
 };
-financeTx.filter(x=>x.type==='Expense').forEach(x=>{let c=normalizeBudgetCategory(x);spent[c]=(spent[c]||0)+Number(x.a||0)});$('budget').innerHTML=cats.slice(0,4).map(c=>{let lim=Number(data.budgets[c]||0),v=spent[c]||0,p=lim?Math.min(100,v/lim*100):0;return `<div class="row"><span>${c}</span><b>${p.toFixed(0)}%</b></div><div class="bar"><i style="width:${p}%"></i></div>`}).join('');$('budgetRows').innerHTML=cats.map(c=>{let lim=Number(data.budgets[c]||0),v=spent[c]||0,diff=lim-v,p=lim?Math.min(100,v/lim*100):0,status=v>lim?'Over budget':p>=80?'Watch':'On track',remaining=diff>=0?`${money(diff)} left`:`${money(Math.abs(diff))} over`;return `<div class="row"><span><b>${c}</b><br><small>${money(v)} spent of ${money(lim)}</small><div class="progress"><i style="width:${p}%"></i></div></span><span><span class="pill">${status}</span><br><small>${remaining}</small></span></div>`}).join('');$('goalRows').innerHTML=data.goals.length?data.goals.map((g,i)=>{let saved=Number(g.saved||0),target=Number(g.target||0),p=target?Math.min(100,saved/target*100):0,left=Math.max(0,target-saved),done=saved>=target;return `<div class="goal"><strong>${g.n}</strong><div class="mini-stat"><span>Saved</span><b>${money(saved)}</b></div><div class="mini-stat"><span>Target</span><b>${money(target)}</b></div><div class="mini-stat"><span>${done?'Status':'Still needed'}</span><b>${done?'Goal reached ✓':money(left)}</b></div><div class="progress"><i style="width:${p}%"></i></div><div class="row"><span class="pill">${p.toFixed(0)}%</span><span><button class="ghost" onclick="addToGoal(${i})">+ Add savings</button> <button class="ghost danger" onclick="delGoal(${i})">×</button></span></div></div>`}).join(''):'<div class="empty">No savings goals yet</div>';let entries=Object.entries(spent).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),total=entries.reduce((s,x)=>s+x[1],0),colors=['#738b72','#d7ad62','#cf7c68','#829ca3','#9a7d82','#8d8166','#a7b79b','#c9a87c'],angle=0,stops=[];entries.forEach((x,i)=>{let a=total?x[1]/total*360:0;stops.push(`${colors[i%colors.length]} ${angle}deg ${angle+a}deg`);angle+=a});$('expenseDonut').style.background=entries.length?`conic-gradient(${stops.join(',')})`:'rgba(103,120,104,.12)';$('expenseLegend').innerHTML=entries.slice(0,7).map((x,i)=>`<div class="mini-stat"><span>● ${x[0]}</span><b>${money(x[1])}</b></div>`).join('')||'<div class="empty">Add expenses to see your breakdown</div>';let budgetTotal=cats.reduce((s,c)=>s+Number(data.budgets[c]||0),0),budgetLeft=budgetTotal-exp,goalSaved=data.goals.reduce((s,g)=>s+Number(g.saved||0),0),goalTargets=data.goals.reduce((s,g)=>s+Number(g.target||0),0);renderReports()}
+financeTx.filter(x=>x.type==='Expense').forEach(x=>{let c=normalizeBudgetCategory(x);spent[c]=(spent[c]||0)+Number(x.a||0)});$('budget').innerHTML=cats.slice(0,4).map(c=>{let lim=Number(data.budgets[c]||0),v=spent[c]||0,p=lim?Math.min(100,v/lim*100):0;return `<div class="row"><span>${c}</span><b>${p.toFixed(0)}%</b></div><div class="bar"><i style="width:${p}%"></i></div>`}).join('');$('budgetRows').innerHTML=cats.map(c=>{let lim=Number(data.budgets[c]||0),v=spent[c]||0,diff=lim-v,p=lim?Math.min(100,v/lim*100):0,status=v>lim?'Over budget':p>=80?'Watch':'On track',remaining=diff>=0?`${money(diff)} left`:`${money(Math.abs(diff))} over`;return `<div class="row"><span><b>${c}</b><br><small>${money(v)} spent of ${money(lim)}</small><div class="progress"><i style="width:${p}%"></i></div></span><span><span class="pill">${status}</span><br><small>${remaining}</small></span></div>`}).join('');$('goalRows').innerHTML=data.goals.length?data.goals.map((g,i)=>{let saved=Number(g.saved||0),target=Number(g.target||0),p=target?Math.min(100,saved/target*100):0,left=Math.max(0,target-saved),done=saved>=target;return `<div class="goal"><strong>${g.n}</strong><div class="mini-stat"><span>Saved</span><b>${money(saved)}</b></div><div class="mini-stat"><span>Target</span><b>${money(target)}</b></div>${g.deadline?`<div class="mini-stat"><span>Target date</span><b>${fmt(g.deadline)}</b></div>`:''}<div class="mini-stat"><span>${done?'Status':'Still needed'}</span><b>${done?'Goal reached ✓':money(left)}</b></div><div class="progress"><i style="width:${p}%"></i></div><div class="row"><span class="pill">${p.toFixed(0)}%</span><span><button class="ghost" onclick="addToGoal(${i})">+ Add savings</button> <button class="ghost" onclick="editGoal(${i})">Edit</button> <button class="ghost danger" onclick="delGoal(${i})">×</button></span></div></div>`}).join(''):'<div class="empty">No savings goals yet</div>';let entries=Object.entries(spent).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),total=entries.reduce((s,x)=>s+x[1],0),colors=['#738b72','#d7ad62','#cf7c68','#829ca3','#9a7d82','#8d8166','#a7b79b','#c9a87c'],angle=0,stops=[];entries.forEach((x,i)=>{let a=total?x[1]/total*360:0;stops.push(`${colors[i%colors.length]} ${angle}deg ${angle+a}deg`);angle+=a});$('expenseDonut').style.background=entries.length?`conic-gradient(${stops.join(',')})`:'rgba(103,120,104,.12)';$('expenseLegend').innerHTML=entries.slice(0,7).map((x,i)=>`<div class="mini-stat"><span>● ${x[0]}</span><b>${money(x[1])}</b></div>`).join('')||'<div class="empty">Add expenses to see your breakdown</div>';let budgetTotal=cats.reduce((s,c)=>s+Number(data.budgets[c]||0),0),budgetLeft=budgetTotal-exp,goalSaved=data.goals.reduce((s,g)=>s+Number(g.saved||0),0),goalTargets=data.goals.reduce((s,g)=>s+Number(g.target||0),0);renderReports()}
 function applyFamilyName(){
   const name=(localStorage.getItem('fccFamilyName')||'').trim()||'Our Home';
   const brand=document.querySelector('.brand');
@@ -443,7 +531,7 @@ function syncSettingsControls(){
 setTimeout(()=>{
  syncSettingsControls();
  if($('settingsCurrency'))$('settingsCurrency').onchange=()=>{$('currency').value=$('settingsCurrency').value;localStorage.setItem('fccCurrency',$('currency').value);render();settingsFlash('✓ Currency saved')};
- if($('settingsDateFmt'))$('settingsDateFmt').onchange=()=>{$('datefmt').value=$('settingsDateFmt').value;localStorage.setItem('fccDateFmt',$('datefmt').value);updateLiveDateSelector();render();settingsFlash('✓ Date format saved')};
+ if($('settingsDateFmt'))$('settingsDateFmt').onchange=()=>{$('datefmt').value=$('settingsDateFmt').value;localStorage.setItem('fccDateFmt',$('datefmt').value);updateLiveDateSelector();updateDateFieldPlaceholders();render();settingsFlash('✓ Date format saved')};
 },0);
 const _fccCurrencyChange=$('currency').onchange;
 $('currency').onchange=()=>{if(_fccCurrencyChange)_fccCurrencyChange();syncSettingsControls()};
@@ -460,9 +548,93 @@ function importDataFile(input){
    data=parsed; localStorage.setItem(KEY,JSON.stringify(data)); render(); settingsFlash('✓ Backup imported successfully'); input.value='';
  }catch(e){alert('Could not import this backup. Please choose a valid Family Command Center JSON backup.');input.value=''}}; reader.readAsText(file);
 }
-applyFamilyName();
-initReportControls();if($('financeMonth')){const mk=$('financeMonth').value||localISODate().slice(0,7);$('financeMonth').value=mk;if($('billMonth'))$('billMonth').value=mk;if($('reportYear'))$('reportYear').value=mk.slice(0,4);if($('reportMonth'))$('reportMonth').value=mk.slice(5,7);}function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-command-center-backup.json';a.click();URL.revokeObjectURL(a.href)}function resetDemo(){if(confirm('Reset all app data to the demo?')){data=structuredClone(demo);save()}}updateCleanScheduleOptions();
-render();
+
+function freshFCCData(){return {tasks:[],events:[],care:[],tx:[],bills:[],meals:{},grocery:[],cleaning:[],inventory:[],goals:[],budgets:{Groceries:0,Utilities:0,Transport:0,'School & Kids':0,Home:0,'Family & Personal':0,Other:0}}}
+function finishOnboarding(sample){
+ const home=($('obHome').value||'').trim();
+ const user=($('obUser').value||'').trim();
+ if(!home){alert('Please enter your Family / Home name.');$('obHome').focus();return}
+ if(!user){alert('Please enter your name.');$('obUser').focus();return}
+ const cur=$('obCurrency').value||'EUR',fmt=$('obDate').value||'eu',th=$('obTheme').value||'auto';
+ try{
+   localStorage.setItem('fccFamilyName',home);
+   localStorage.setItem('fccUserName',user);
+   localStorage.setItem('fccCurrency',cur);
+   localStorage.setItem('fccDateFmt',fmt);
+   localStorage.setItem('fccAnnualMariaTest2026_v3','1');
+   localStorage.setItem('fccAnnualBills2026_v1','1');
+   if(sample){
+     data=structuredClone(demo);
+     data.budgets={Groceries:900,Utilities:700,Transport:450,'School & Kids':500,Home:1600,'Family & Personal':400,Other:250};
+     data.goals=[{n:'Emergency Fund',target:5000,saved:1800,deadline:''},{n:'Family Holiday',target:2500,saved:650,deadline:''}];
+   }else{
+     // The user explicitly chose a new Command Center: begin with a clean data set.
+     // Merely opening/reopening the file never clears anything.
+     data=freshFCCData();
+   }
+   localStorage.setItem(KEY,JSON.stringify(data));
+   if(th==='auto'){
+     localStorage.setItem('fccThemeMode','auto');
+     localStorage.removeItem('fccSeasonTheme');
+   }else{
+     localStorage.setItem('fccThemeMode','manual');
+     localStorage.setItem('fccSeasonTheme',th);
+   }
+   // Set this LAST: only a fully saved setup may unlock the app.
+   localStorage.setItem(FCC_ONBOARD_KEY,'1');
+   // Reload into the normal boot path instead of trying to manually unwind the onboarding UI.
+   window.location.reload();
+ }catch(err){
+   console.error('Onboarding save failed',err);
+   alert('Could not start your Command Center. Please try again.');
+ }
+}
+function initFirstLaunch(){
+ const complete=localStorage.getItem(FCC_ONBOARD_KEY)==='1';
+ if(complete){
+   document.body.classList.remove('fcc-booting','fcc-first-launch');
+   $('onboarding').classList.remove('show');
+   $('onboarding').style.display='none';
+   return false;
+ }
+ // A new build/version gets its own onboarding gate. Old profile data is NOT used to skip it.
+ // Nothing is deleted merely by opening the file. Data changes only after the user presses Start/Preview.
+ $('currency').value=localStorage.getItem('fccCurrency')||'EUR'; $('datefmt').value=localStorage.getItem('fccDateFmt')||'eu';
+ $('obCurrency').value=$('currency').value; $('obDate').value=$('datefmt').value; $('obTheme').value='auto';
+ $('obHome').value=''; $('obUser').value='';
+ document.body.classList.add('fcc-first-launch');
+ document.body.classList.remove('fcc-booting');
+ $('onboarding').classList.add('show');
+ $('onboarding').style.display='flex';
+ const app=document.querySelector('.app'); if(app)app.style.display='none';
+ return true;
+}
+
+const FCC_IS_FIRST_LAUNCH=initFirstLaunch();
+if(!FCC_IS_FIRST_LAUNCH) applyFamilyName();
+initReportControls();if($('financeMonth')){const mk=$('financeMonth').value||localISODate().slice(0,7);$('financeMonth').value=mk;if($('billMonth'))$('billMonth').value=mk;if($('reportYear'))$('reportYear').value=mk.slice(0,4);if($('reportMonth'))$('reportMonth').value=mk.slice(5,7);}function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-command-center-backup.json';a.click();URL.revokeObjectURL(a.href)}function resetDemo(){if(confirm('Load sample data? Current app data will be replaced.')){data=structuredClone(demo);data.budgets={Groceries:900,Utilities:700,Transport:450,'School & Kids':500,Home:1600,'Family & Personal':400,Other:250};data.goals=[{n:'Emergency Fund',target:5000,saved:1800},{n:'Family Holiday',target:2500,saved:650}];save();settingsFlash('✓ Sample data loaded')}}updateCleanScheduleOptions();
+
+
+function enableNativeDatePickers(){
+ document.querySelectorAll('input[type="date"]').forEach(el=>{
+   const open=()=>{try{if(typeof el.showPicker==='function')el.showPicker()}catch(e){}};
+   el.addEventListener('click',open);
+ });
+}
+
+function setupKeyboardFlow(){
+ const forms=[
+  [['txDesc','txAmount','txType','txCategory'],'txAddBtn'],
+  [['billName','billAmount','billDue'],'billAddBtn'],
+  [['goalName','goalTarget','goalSaved','goalDeadline'],'goalAddBtn'],
+  [['careTitle','careLast','careStatus','careFreq','careDue','careProvider','careCost','careNotes'],'careAddBtn']
+ ];
+ forms.forEach(([ids,btnId])=>ids.forEach((id,idx)=>{let el=$(id);if(!el)return;el.setAttribute('enterkeyhint',idx===ids.length-1?'go':'next');el.addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();if(idx<ids.length-1){let nx=$(ids[idx+1]);if(nx)nx.focus()}else{let b=$(btnId);if(b)b.click()}})}));
+ ['obHome','obUser'].forEach((id,idx)=>{let el=$(id);if(el)el.setAttribute('enterkeyhint','next')});
+}
+setTimeout(()=>{setupKeyboardFlow();enableNativeDatePickers();syncDashboardControls()},0);
+window.addEventListener('pageshow',()=>{syncDashboardControls();enableNativeDatePickers();});
+if(!FCC_IS_FIRST_LAUNCH){render();}else{syncDashboardControls();}
 </script>
 <script id="dynamic-time-greeting">
 (function(){
