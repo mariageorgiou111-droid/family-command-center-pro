@@ -280,29 +280,28 @@ function editEvent(i){let x=data.events[i],t=prompt('Event:',x.t);if(t===null)re
 let careEditIndex=null,cleanEditIndex=null,invEditIndex=null;
 function addMonthsISO(d,n){if(!d)return'';let x=new Date(d+'T12:00:00'),day=x.getDate();x.setDate(1);x.setMonth(x.getMonth()+n);let last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();x.setDate(Math.min(day,last));return localISODate(x)}
 function nextCareDate(last,f){if(!last)return'';return f==='Monthly'?addMonthsISO(last,1):f==='Every 3 months'?addMonthsISO(last,3):f==='Every 6 months'?addMonthsISO(last,6):f==='Yearly'?addMonthsISO(last,12):''}
+function fccCommit(){ localStorage.setItem(KEY,JSON.stringify(data)); }
+function renderHomeListsSafe(){
+  if($('cleanRows')) $('cleanRows').innerHTML=data.cleaning.length?data.cleaning.map((x,i)=>`<div class="row"><span><b>${x.t}</b><div class="home-meta">${x.f||''}${cleanScheduleFromOld(x)?' · '+cleanScheduleFromOld(x):''}${x.person?' · '+x.person:''}</div>${x.notes?`<small>${x.notes}</small>`:''}</span><span class="home-actions"><button class="ghost" onclick="completeCleaning(${i})">Done</button><button class="ghost" onclick="editCleaning(${i})">Edit</button><button class="ghost danger" onclick="del('cleaning',${i})">×</button></span></div>`).join(''):'<div class="empty">No cleaning tasks yet</div>';
+  if($('careRows')) $('careRows').innerHTML=data.care.length?data.care.map((x,i)=>`<div class="row"><span><b>${x.t}</b><div class="home-meta">${x.freq||'One-off'}${x.d?' · Next: '+fmt(x.d):''}${x.last?' · Last serviced: '+fmt(x.last):''}</div>${x.provider?`<small>Provider: ${x.provider}</small><br>`:''}${Number(x.cost||0)?`<small>Cost: ${money(x.cost)}</small><br>`:''}${x.notes?`<small>${x.notes}</small>`:''}</span><span class="home-actions"><select class="ghost" onchange="setCareStatus(${i},this.value)"><option${x.s==='To do'?' selected':''}>To do</option><option${x.s==='Booked'?' selected':''}>Booked</option><option${x.s==='Done'?' selected':''}>Done</option></select><button class="ghost" onclick="editCare(${i})">Edit</button><button class="ghost danger" onclick="del('care',${i})">×</button></span></div>`).join(''):'<div class="empty">No maintenance items yet</div>';
+  if($('invRows')) $('invRows').innerHTML=data.inventory.length?data.inventory.map((x,i)=>`<div class="row"><span><b>${x.n}</b><div class="home-meta">${x.purchase?'Purchased: '+fmt(x.purchase):''}${x.warranty?' · Warranty: '+fmt(x.warranty):''}</div>${x.model?`<small>${x.model}</small>`:''}${x.notes?`<br><small>${x.notes}</small>`:''}</span><span class="home-actions"><button class="ghost" onclick="editInventory(${i})">Edit</button><button class="ghost danger" onclick="del('inventory',${i})">×</button></span></div>`).join(''):'<div class="empty">No inventory items yet</div>';
+}
 function saveCare(){
- let t=$('careTitle').value.trim();if(!t)return;
- let last=$('careLast').value,f=$('careFreq').value,d=$('careDue').value||nextCareDate(last,f);
+ let t=$('careTitle').value.trim();if(!t){alert('Please add a maintenance item.');return}
+ let last=readDate('careLast'),f=$('careFreq').value,d=readDate('careDue')||nextCareDate(last,f);
  let old=careEditIndex===null?null:data.care[careEditIndex];
- let item={t,d,s:$('careStatus').value,notes:$('careNotes').value.trim(),freq:f,last,provider:$('careProvider').value.trim(),cost:parseFloat($('careCost').value||0)||0,history:(old&&Array.isArray(old.history))?old.history:[]};
- if(item.s==='Done'&&last){let sig=last+'|'+item.cost+'|'+item.provider;if(!item.history.some(h=>(h.date+'|'+Number(h.cost||0)+'|'+(h.provider||''))===sig))item.history.push({date:last,cost:item.cost,provider:item.provider,notes:item.notes});}
+ let item={t,d,s:$('careStatus').value,notes:$('careNotes').value.trim(),freq:f,last,provider:$('careProvider').value.trim(),cost:parseFloat(String($('careCost').value||'0').replace(',','.'))||0,history:(old&&Array.isArray(old.history))?old.history:[]};
  if(careEditIndex===null)data.care.push(item);else{data.care[careEditIndex]=item;careEditIndex=null}
- ['careTitle','careDue','careLast','careProvider','careCost','careNotes'].forEach(id=>$(id).value='');$('careStatus').value='To do';$('careFreq').value='One-off';$('careAddBtn').textContent='Add maintenance';save()
+ fccCommit(); renderHomeListsSafe();
+ ['careTitle','careDue','careLast','careProvider','careCost','careNotes'].forEach(id=>$(id).value='');$('careStatus').value='To do';$('careFreq').value='One-off';$('careAddBtn').textContent='Add maintenance';
+ try{render()}catch(e){console.error(e)} renderHomeListsSafe();
 }
-function setCareStatus(i,s){
- let x=data.care[i];x.s=s;
- if(s==='Done'){
-   x.last=localISODate();if(!Array.isArray(x.history))x.history=[];
-   x.history.push({date:x.last,cost:Number(x.cost||0),provider:x.provider||'',notes:x.notes||''});
-   let nd=nextCareDate(x.last,x.freq||'One-off');if(nd){x.d=nd;x.s='To do'}
- }
- save()
-}
+function setCareStatus(i,s){let x=data.care[i];if(!x)return;x.s=s;if(s==='Done'){x.last=localISODate();if(!Array.isArray(x.history))x.history=[];x.history.push({date:x.last,cost:Number(x.cost||0),provider:x.provider||'',notes:x.notes||''});let nd=nextCareDate(x.last,x.freq||'One-off');if(nd){x.d=nd;x.s='To do'}}fccCommit();try{render()}catch(e){}renderHomeListsSafe()}
 function editCare(i){let x=data.care[i];careEditIndex=i;$('careTitle').value=x.t||'';writeDate('careDue',x.d||'');$('careStatus').value=x.s||'To do';$('careFreq').value=x.freq||'One-off';writeDate('careLast',x.last||'');$('careProvider').value=x.provider||'';$('careCost').value=x.cost||'';$('careNotes').value=x.notes||'';$('careAddBtn').textContent='Save changes';$('careTitle').scrollIntoView({behavior:'smooth',block:'center'})}
-function saveCleaning(){let t=$('cleanTitle').value.trim();if(!t)return;let old=cleanEditIndex===null?null:data.cleaning[cleanEditIndex];let item={t,f:$('cleanFreq').value,schedule:$('cleanDay').value,person:$('cleanPerson').value.trim(),notes:$('cleanNotes').value.trim(),done:false,last:old?.last||''};if(cleanEditIndex===null)data.cleaning.push(item);else{data.cleaning[cleanEditIndex]=item;cleanEditIndex=null}['cleanTitle','cleanPerson','cleanNotes'].forEach(id=>$(id).value='');$('cleanFreq').value='Daily';updateCleanScheduleOptions();$('cleanBtn').textContent='Add';save()}
+function saveCleaning(){let t=$('cleanTitle').value.trim();if(!t){alert('Please add a cleaning task.');return}let old=cleanEditIndex===null?null:data.cleaning[cleanEditIndex];let item={t,f:$('cleanFreq').value,schedule:$('cleanDay').value,person:$('cleanPerson').value.trim(),notes:$('cleanNotes').value.trim(),done:false,last:old?.last||''};if(cleanEditIndex===null)data.cleaning.push(item);else{data.cleaning[cleanEditIndex]=item;cleanEditIndex=null}fccCommit();renderHomeListsSafe();['cleanTitle','cleanPerson','cleanNotes'].forEach(id=>$(id).value='');$('cleanFreq').value='Daily';updateCleanScheduleOptions();$('cleanBtn').textContent='Add';try{render()}catch(e){}renderHomeListsSafe()}
 function completeCleaning(i){let x=data.cleaning[i];x.last=localISODate();x.done=false;save()}
 function editCleaning(i){let x=data.cleaning[i];cleanEditIndex=i;$('cleanTitle').value=x.t||'';$('cleanFreq').value=x.f||'Weekly';updateCleanScheduleOptions(cleanScheduleFromOld(x));$('cleanPerson').value=x.person||'';$('cleanNotes').value=x.notes||'';$('cleanBtn').textContent='Save changes';$('cleanTitle').scrollIntoView({behavior:'smooth',block:'center'})}
-function saveInventory(){let n=$('invName').value.trim();if(!n)return;let item={n,purchase:readDate('invPurchase'),warranty:readDate('invWarranty'),model:$('invModel').value.trim(),notes:$('invNotes').value.trim()};if(invEditIndex===null)data.inventory.push(item);else{data.inventory[invEditIndex]=item;invEditIndex=null}['invName','invPurchase','invWarranty','invModel','invNotes'].forEach(id=>$(id).value='');$('invBtn').textContent='Add';save()}
+function saveInventory(){let n=$('invName').value.trim();if(!n){alert('Please add an item / appliance.');return}let item={n,purchase:readDate('invPurchase'),warranty:readDate('invWarranty'),model:$('invModel').value.trim(),notes:$('invNotes').value.trim()};if(invEditIndex===null)data.inventory.push(item);else{data.inventory[invEditIndex]=item;invEditIndex=null}fccCommit();renderHomeListsSafe();['invName','invPurchase','invWarranty','invModel','invNotes'].forEach(id=>$(id).value='');$('invBtn').textContent='Add';try{render()}catch(e){}renderHomeListsSafe()}
 function editInventory(i){let x=data.inventory[i];invEditIndex=i;$('invName').value=x.n||'';writeDate('invPurchase',x.purchase||'');writeDate('invWarranty',x.warranty||'');$('invModel').value=x.model||'';$('invNotes').value=x.notes||'';$('invBtn').textContent='Save changes';$('invName').scrollIntoView({behavior:'smooth',block:'center'})}
 
 let txEditIndex=null,billEditIndex=null;
@@ -311,7 +310,7 @@ function addTx(){
   if(!desc){alert('Please add a description.');$('txDesc').focus();return;}if(!Number.isFinite(amount)||amount<=0){alert('Please enter a valid amount greater than 0.');$('txAmount').focus();return;}
   if(!Array.isArray(data.tx))data.tx=[];let entryDate=txEditIndex===null?autoTransactionDate():(data.tx[txEditIndex].date||autoTransactionDate());let obj={d:desc,a:amount,type,category,date:entryDate};
   if(txEditIndex===null)data.tx.push(obj);else{data.tx[txEditIndex]=obj;txEditIndex=null;$('txAddBtn').textContent='Add'}
-  $('txDesc').value='';$('txAmount').value='';save()
+  if($('financeMonth'))$('financeMonth').value=entryDate.slice(0,7); fccCommit(); $('txDesc').value='';$('txAmount').value=''; try{render()}catch(e){console.error(e)} renderImmediateLists()
 }
 function editTx(i){let x=data.tx[i];txEditIndex=i;$('txDesc').value=x.d||'';$('txAmount').value=x.a||'';$('txType').value=x.type||'Expense';$('txCategory').value=x.category||'Other';$('txAddBtn').textContent='Save changes';$('txDesc').focus()}
 function addBill(){let n=$('billName').value.trim(),a=parseFloat($('billAmount').value),d=readDate('billDue');if(!n||!Number.isFinite(a)||a<=0)return;let old=billEditIndex===null?null:data.bills[billEditIndex];let obj={n,a,d,paid:old?!!old.paid:false};if(billEditIndex===null)data.bills.push(obj);else{data.bills[billEditIndex]=obj;billEditIndex=null;$('billAddBtn').textContent='Add'}$('billName').value='';$('billAmount').value='';$('billDue').value='';save()}
@@ -321,7 +320,7 @@ function toggleBill(i){
   if(!b.id)b.id='bill_'+Date.now()+'_'+i;
   if(!Array.isArray(data.tx))data.tx=[];
   if(b.paid){
-    if(!data.tx.some(t=>t.billId===b.id))data.tx.push({d:b.n,a:Number(b.a||0),type:'Expense',category:'Bills & Utilities',date:b.d||localISODate(),billId:b.id,autoBill:true});
+    if(!data.tx.some(t=>t.billId===b.id))data.tx.push({d:b.n,a:Number(b.a||0),type:'Expense',category:'Bills & Utilities',date:autoTransactionDate(),billId:b.id,autoBill:true});
   }else{
     data.tx=data.tx.filter(t=>!(t.autoBill&&t.billId===b.id));
   }
