@@ -674,4 +674,40 @@ if(!FCC_IS_FIRST_LAUNCH){render();}else{syncDashboardControls();}
 })();
 </script>
 
+
+<script id="fcc-header-killshot-v1">
+(function(){
+  function isoToday(){
+    var d=new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+  function formatToday(fmt){
+    var s=isoToday(), a=s.split('-'), y=a[0],m=a[1],d=a[2];
+    if(fmt==='us') return m+'/'+d+'/'+y;
+    if(fmt==='iso') return y+'-'+m+'-'+d;
+    return d+'/'+m+'/'+y;
+  }
+  function forceHeader(){
+    try{
+      var cur=localStorage.getItem('fccCurrency') || 'EUR';
+      var df=localStorage.getItem('fccDateFmt') || 'eu';
+      var c=document.getElementById('dashboardCurrency');
+      var dt=document.getElementById('dashboardDate');
+      var cs=document.getElementById('currency');
+      var ds=document.getElementById('datefmt');
+      if(cs) cs.value=cur;
+      if(ds) ds.value=df;
+      if(c){ c.textContent=cur; c.innerText=cur; c.style.visibility='visible'; c.style.opacity='1'; }
+      if(dt){ var v=formatToday(df); dt.textContent=v; dt.innerText=v; dt.style.visibility='visible'; dt.style.opacity='1'; }
+    }catch(e){ console.error('FCC header killshot failed',e); }
+  }
+  window.fccForceHeader=forceHeader;
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',forceHeader); else forceHeader();
+  window.addEventListener('load',forceHeader);
+  window.addEventListener('pageshow',forceHeader);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) forceHeader(); });
+  setTimeout(forceHeader,0); setTimeout(forceHeader,100); setTimeout(forceHeader,500); setTimeout(forceHeader,1200);
+})();
+</script>
+
 </body></html>
