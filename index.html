@@ -146,7 +146,7 @@ body.fcc-booting #onboarding,body.fcc-first-launch #onboarding{display:flex!impo
 <h3 style="margin-top:24px">💶 Currency & Date</h3><div class="form simple"><select id="settingsCurrency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select><select id="settingsDateFmt"><option value="us">Sep 9, 2026</option><option value="eu">09-Sep-2026</option><option value="iso">2026-09-09</option></select></div>
 <h3 style="margin-top:24px">🎨 Theme</h3><p class="note">Automatic follows the current season. Or choose any special theme whenever you like.</p><div class="form simple"><select id="themeMode" onchange="setThemeMode(this.value)"><option value="auto">✨ Automatic — Follow the season</option><option value="manual">🎨 Manual selection</option></select><button class="action" onclick="applyAutoTheme()">Apply now</button></div><div class="theme-gallery" id="themeGallery"></div><div class="season-note" id="themeNote"></div>
 </div>
-<div class="section"><h2>💾 Backup & Data</h2><p class="note">Your information stays in this browser using local storage. Export a backup before clearing browser data or moving to another device.</p><div class="settings-actions"><button class="action" onclick="exportData()">⬇ Export backup</button><label class="ghost settings-import">⬆ Import backup<input id="backupImport" type="file" onchange="importDataFile(this)" hidden></label></div><div id="backupStatus" class="season-note" style="display:none"></div><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button class="ghost danger" onclick="resetDemo()">Load sample data</button><div class="note">Loads the original sample content for preview/testing. It does not change your currency, date format, family name or theme.</div></div>
+<div class="section"><h2>💾 Backup & Data</h2><p class="note">Your information stays in this browser using local storage. Export a backup before clearing browser data or moving to another device.</p><div class="settings-actions"><button class="action" onclick="exportData()">⬇ Export backup</button><label class="ghost settings-import">⬆ Import backup<input id="backupImport" type="file" accept="text/plain,.txt" onchange="importDataFile(this)" hidden></label></div><div id="backupStatus" class="season-note" style="display:none"></div><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button class="ghost danger" onclick="resetDemo()">Load sample data</button><div class="note">Loads the original sample content for preview/testing. It does not change your currency, date format, family name or theme.</div></div>
 </div>
 </main></div><script>
 const $=id=>document.getElementById(id),KEY='fccProDataV7_6_QA';
@@ -565,7 +565,7 @@ function importDataFile(input){
    if(!required.every(k=>Array.isArray(parsed[k])))throw new Error('This is not a Family Command Center backup');
    if(!confirm('Import this backup? Current app data will be replaced.')){input.value='';return}
    data=parsed; localStorage.setItem(KEY,JSON.stringify(data)); render(); settingsFlash('✓ Backup imported successfully'); input.value='';
- }catch(e){alert('Could not import this backup. Please choose a valid Family Command Center JSON backup.');input.value=''}}; reader.readAsText(file);
+ }catch(e){alert('Could not import this backup. Please choose a valid Family Command Center backup file.');input.value=''}}; reader.readAsText(file);
 }
 
 function freshFCCData(){return {tasks:[],events:[],care:[],tx:[],bills:[],meals:{},grocery:[],cleaning:[],inventory:[],goals:[],budgets:{Groceries:0,Utilities:0,Transport:0,'School & Kids':0,Home:0,'Family & Personal':0,Other:0}}}
@@ -634,11 +634,13 @@ if(!FCC_IS_FIRST_LAUNCH) applyFamilyName();
 initReportControls();if($('financeMonth')){const mk=$('financeMonth').value||localISODate().slice(0,7);$('financeMonth').value=mk;if($('billMonth'))$('billMonth').value=mk;if($('reportYear'))$('reportYear').value=mk.slice(0,4);if($('reportMonth'))$('reportMonth').value=mk.slice(5,7);}function exportData(){
  try{
   const payload=JSON.stringify(data,null,2);
-  const blob=new Blob([payload],{type:'application/json;charset=utf-8'});
+  // Android/Samsung file pickers commonly hide .json files. Store the same
+  // JSON payload as a plain-text .txt backup so it is visible everywhere.
+  const blob=new Blob([payload],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download='family-command-center-backup-'+localISODate()+'.json';
+  a.download='family-command-center-backup-'+localISODate()+'.txt';
   a.style.display='none';
   document.body.appendChild(a);
   a.click();
@@ -647,8 +649,8 @@ initReportControls();if($('financeMonth')){const mk=$('financeMonth').value||loc
  }catch(e){
   console.error('Backup export failed',e);
   try{
-   const fallback='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));
-   const a=document.createElement('a');a.href=fallback;a.download='family-command-center-backup-'+localISODate()+'.json';document.body.appendChild(a);a.click();a.remove();
+   const fallback='data:text/plain;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));
+   const a=document.createElement('a');a.href=fallback;a.download='family-command-center-backup-'+localISODate()+'.txt';document.body.appendChild(a);a.click();a.remove();
    settingsFlash('✓ Backup export started — check your Downloads');
   }catch(err){alert('Could not export the backup in this browser.');}
  }
