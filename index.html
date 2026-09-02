@@ -631,7 +631,28 @@ function initFirstLaunch(){
 
 const FCC_IS_FIRST_LAUNCH=initFirstLaunch();
 if(!FCC_IS_FIRST_LAUNCH) applyFamilyName();
-initReportControls();if($('financeMonth')){const mk=$('financeMonth').value||localISODate().slice(0,7);$('financeMonth').value=mk;if($('billMonth'))$('billMonth').value=mk;if($('reportYear'))$('reportYear').value=mk.slice(0,4);if($('reportMonth'))$('reportMonth').value=mk.slice(5,7);}function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='family-command-center-backup.json';a.click();URL.revokeObjectURL(a.href)}function resetDemo(){if(confirm('Load sample data? Current app data will be replaced.')){data=structuredClone(demo);data.budgets={Groceries:900,Utilities:700,Transport:450,'School & Kids':500,Home:1600,'Family & Personal':400,Other:250};data.goals=[{n:'Emergency Fund',target:5000,saved:1800},{n:'Family Holiday',target:2500,saved:650}];save();settingsFlash('✓ Sample data loaded')}}updateCleanScheduleOptions();
+initReportControls();if($('financeMonth')){const mk=$('financeMonth').value||localISODate().slice(0,7);$('financeMonth').value=mk;if($('billMonth'))$('billMonth').value=mk;if($('reportYear'))$('reportYear').value=mk.slice(0,4);if($('reportMonth'))$('reportMonth').value=mk.slice(5,7);}function exportData(){
+ try{
+  const payload=JSON.stringify(data,null,2);
+  const blob=new Blob([payload],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='family-command-center-backup-'+localISODate()+'.json';
+  a.style.display='none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{try{URL.revokeObjectURL(url)}catch(e){};try{a.remove()}catch(e){}},1500);
+  settingsFlash('✓ Backup export started — check your Downloads');
+ }catch(e){
+  console.error('Backup export failed',e);
+  try{
+   const fallback='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));
+   const a=document.createElement('a');a.href=fallback;a.download='family-command-center-backup-'+localISODate()+'.json';document.body.appendChild(a);a.click();a.remove();
+   settingsFlash('✓ Backup export started — check your Downloads');
+  }catch(err){alert('Could not export the backup in this browser.');}
+ }
+}function resetDemo(){if(confirm('Load sample data? Current app data will be replaced.')){data=structuredClone(demo);data.budgets={Groceries:900,Utilities:700,Transport:450,'School & Kids':500,Home:1600,'Family & Personal':400,Other:250};data.goals=[{n:'Emergency Fund',target:5000,saved:1800},{n:'Family Holiday',target:2500,saved:650}];save();settingsFlash('✓ Sample data loaded')}}updateCleanScheduleOptions();
 
 
 function enableNativeDatePickers(){
