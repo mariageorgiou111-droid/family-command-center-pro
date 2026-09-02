@@ -113,28 +113,28 @@ body.fcc-booting #onboarding,body.fcc-first-launch #onboarding{display:flex!impo
 .onboard-backdrop{position:fixed;inset:0;z-index:99999;background:rgba(34,43,36,.56);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}.onboard-backdrop.show{display:flex}body.fcc-first-launch>.shell,body.fcc-first-launch>.app,body.fcc-first-launch>header,body.fcc-first-launch>main{visibility:hidden}body.fcc-first-launch #onboarding{visibility:visible}.onboard-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:rgba(255,252,244,.98);border:1px solid rgba(120,140,118,.28);border-radius:28px;box-shadow:0 28px 80px rgba(25,35,28,.28);padding:28px}.onboard-mark{text-align:center;font-size:48px}.onboard-card h2{text-align:center;font-family:Georgia,serif;font-size:30px;margin:8px 0;color:var(--ink)}.onboard-lead{text-align:center;color:var(--muted);margin:0 auto 24px;max-width:520px}.onboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.onboard-field{display:flex;flex-direction:column;gap:7px}.onboard-field.full{grid-column:1/-1}.onboard-field label{font-weight:800;color:var(--sage-dark);font-size:13px}.onboard-field input,.onboard-field select{width:100%;box-sizing:border-box}.onboard-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}.onboard-actions .action{min-height:52px;font-size:16px}.onboard-sample{text-align:center;margin-top:12px}.onboard-sample button{border:0;background:transparent;color:var(--sage-dark);font-weight:800;text-decoration:underline;cursor:pointer}.welcome-empty{padding:14px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}.member-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(128,151,124,.14);font-weight:700;margin-top:8px}@media(max-width:600px){.onboard-card{padding:22px 18px;border-radius:22px}.onboard-card h2{font-size:26px}.onboard-grid{grid-template-columns:1fr}.onboard-field.full{grid-column:auto}}
 </style>
 
-<style id="fcc-dashboard-frosted-makeover-v1">
-/* Dashboard-only visual makeover. No app logic is changed. */
-#dashboard .card,
-#dashboard .section{
-  background:linear-gradient(145deg,rgba(255,252,246,.68),rgba(255,255,255,.43)) !important;
-  border:1px solid rgba(255,255,255,.72) !important;
-  -webkit-backdrop-filter:blur(11px) saturate(118%);
-  backdrop-filter:blur(11px) saturate(118%);
-  box-shadow:0 16px 42px rgba(50,67,54,.11), inset 0 1px 0 rgba(255,255,255,.55) !important;
+<style id="fcc-global-frosted-makeover-v2">
+/* Global visual makeover only — app logic/data untouched. */
+:root{--glass:rgba(255,252,246,.36);--glass2:rgba(244,238,225,.30)}
+.top,.card,.section{
+  background:linear-gradient(145deg,rgba(255,252,246,.38),rgba(255,255,255,.20)) !important;
+  border:1px solid rgba(255,255,255,.76) !important;
+  -webkit-backdrop-filter:blur(8px) saturate(112%);
+  backdrop-filter:blur(8px) saturate(112%);
+  box-shadow:0 14px 34px rgba(50,67,54,.10),inset 0 1px 0 rgba(255,255,255,.48) !important;
 }
-#dashboard .card.kpi{
-  background:linear-gradient(145deg,rgba(255,252,246,.62),rgba(255,255,255,.38)) !important;
-}
-#dashboard .card.kpi:after{background:rgba(115,139,114,.075) !important}
-#dashboard .row{border-bottom-color:rgba(69,91,74,.13)}
-#dashboard .pill{background:rgba(226,235,218,.64)}
-#dashboard .bar{background:rgba(255,255,255,.38);box-shadow:inset 0 0 0 1px rgba(79,100,83,.06)}
+.card.kpi{background:linear-gradient(145deg,rgba(255,252,246,.33),rgba(255,255,255,.17)) !important}
+.card.kpi:after{background:rgba(115,139,114,.055)!important}
+.row{border-bottom-color:rgba(69,91,74,.14)}
+.pill,.season-note{background:rgba(226,235,218,.48)!important}
+.bar{background:rgba(255,255,255,.30)!important;box-shadow:inset 0 0 0 1px rgba(79,100,83,.06)}
+.theme-choice{background:rgba(255,255,255,.32)!important;border-color:rgba(255,255,255,.65)!important;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+select,.theme,input,textarea,.ghost{background:rgba(255,255,255,.62)!important;border-color:rgba(255,255,255,.68)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+aside{background:rgba(248,244,235,.40)!important;-webkit-backdrop-filter:blur(10px) saturate(112%);backdrop-filter:blur(10px) saturate(112%)}
+nav button.active,nav button:hover{background:rgba(255,255,255,.42)!important}
 @media(max-width:700px){
-  #dashboard .card,#dashboard .section{
-    -webkit-backdrop-filter:blur(9px) saturate(115%);
-    backdrop-filter:blur(9px) saturate(115%);
-  }
+  .top,.card,.section{-webkit-backdrop-filter:blur(7px) saturate(110%);backdrop-filter:blur(7px) saturate(110%)}
+  aside{background:rgba(248,244,235,.38)!important}
 }
 </style>
 </head><body class="fcc-booting"><div id="onboarding" class="onboard-backdrop" role="dialog" aria-modal="true" aria-labelledby="onboardTitle"><div class="onboard-card"><div class="onboard-mark">🏠</div><h2 id="onboardTitle">Welcome to your Family Command Center ♥</h2><p class="onboard-lead">Let’s make it yours. A few quick choices and your home starts clean — ready for your real plans, not somebody else’s demo life.</p><div class="onboard-grid"><div class="onboard-field full"><label for="obHome">Family / Home name</label><input id="obHome" placeholder="e.g. The Green Family"></div><div class="onboard-field"><label for="obUser">Your name</label><input id="obUser" placeholder="e.g. Maria"></div><div class="onboard-field"><label for="obCurrency">Currency</label><select id="obCurrency"><option>EUR</option><option>USD</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select></div><div class="onboard-field"><label for="obDate">Date format</label><select id="obDate"><option value="eu">DD/MM/YYYY</option><option value="us">MM/DD/YYYY</option><option value="iso">YYYY-MM-DD</option></select></div><div class="onboard-field"><label for="obTheme">Theme</label><select id="obTheme"><option value="auto">Automatic seasonal</option><option value="spring">🌸 Spring</option><option value="summer">☀️ Summer</option><option value="autumn">🍂 Autumn</option><option value="winter">❄️ Winter</option><option value="valentine">💘 Valentine’s</option><option value="easter">🐣 Easter</option><option value="halloween">🎃 Halloween</option><option value="christmas">🎄 Christmas</option></select></div></div><div class="onboard-actions"><button class="action" onclick="finishOnboarding(false)">Start My Command Center</button></div><div class="onboard-sample"><button onclick="finishOnboarding(true)">Preview with sample data instead</button></div></div></div><div class="app"><aside><div class="brand">Our Home ♥<small>FAMILY COMMAND CENTER PRO</small></div><div class="home-art"><div class="sun"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><nav id="nav"></nav></aside><main>
