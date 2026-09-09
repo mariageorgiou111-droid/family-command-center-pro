@@ -500,6 +500,37 @@ body.season-autumn nav button,body.special-halloween nav button,body.special-chr
 /* Active/action buttons remain white on their solid fill. */
 body.season-autumn :is(.action,.finance-tabs button.active,.report-switch button.active),body.special-halloween :is(.action,.finance-tabs button.active,.report-switch button.active),body.special-christmas :is(.action,.finance-tabs button.active,.report-switch button.active){color:#fff!important;text-shadow:none!important;}
 </style>
+
+<style id="fcc-finance-dark-rows-nav-fix-v3">
+/* Final targeted readability fix: Finance transaction rows on dark themes only. */
+body.season-autumn #fin-transactions #txRows .row > span:first-child,
+body.special-halloween #fin-transactions #txRows .row > span:first-child,
+body.special-christmas #fin-transactions #txRows .row > span:first-child{
+  color:#fffaf0!important;
+  font-weight:700!important;
+  text-shadow:none!important;
+}
+body.season-autumn #fin-transactions #txRows .row small,
+body.season-autumn #fin-transactions #txRows .row .badge,
+body.special-halloween #fin-transactions #txRows .row small,
+body.special-halloween #fin-transactions #txRows .row .badge,
+body.special-christmas #fin-transactions #txRows .row small,
+body.special-christmas #fin-transactions #txRows .row .badge{
+  color:#fffaf0!important;opacity:1!important;font-weight:800!important;text-shadow:none!important;
+}
+body.season-autumn #fin-transactions #txRows .tx-income-amount,
+body.special-halloween #fin-transactions #txRows .tx-income-amount,
+body.special-christmas #fin-transactions #txRows .tx-income-amount{color:#72e39a!important;font-weight:900!important;text-shadow:none!important;filter:none!important;}
+body.season-autumn #fin-transactions #txRows .tx-expense-amount,
+body.special-halloween #fin-transactions #txRows .tx-expense-amount,
+body.special-christmas #fin-transactions #txRows .tx-expense-amount{color:#ff716b!important;font-weight:900!important;text-shadow:none!important;filter:none!important;}
+/* Halloween bottom navigation: stronger light glass so every tab stays readable. */
+@media(max-width:900px){
+ body.special-halloween aside{background:rgba(249,238,224,.78)!important;-webkit-backdrop-filter:blur(12px) saturate(112%)!important;backdrop-filter:blur(12px) saturate(112%)!important;border-color:rgba(255,255,255,.78)!important;}
+ body.special-halloween nav button{color:#17472f!important;opacity:1!important;text-shadow:none!important;}
+ body.special-halloween nav button.active{background:rgba(255,250,242,.82)!important;color:#49352b!important;}
+}
+</style>
 </head><body class="fcc-booting"><div id="onboarding" class="onboard-backdrop" role="dialog" aria-modal="true" aria-labelledby="onboardTitle"><div class="onboard-card"><div class="onboard-mark">🏠</div><h2 id="onboardTitle">Welcome to your Family Command Center ♥</h2><p class="onboard-lead">Let’s make it yours. A few quick choices and your home starts clean — ready for your real plans, not somebody else’s demo life.</p><div class="onboard-grid"><div class="onboard-field full"><label for="obHome">Family / Home name</label><input id="obHome" placeholder="e.g. The Green Family"></div><div class="onboard-field"><label for="obUser">Your name</label><input id="obUser" placeholder="e.g. Maria"></div><div class="onboard-field"><label for="obCurrency">Currency</label><select id="obCurrency"><option>EUR</option><option>USD</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select></div><div class="onboard-field"><label for="obDate">Date format</label><select id="obDate"><option value="eu">DD/MM/YYYY</option><option value="us">MM/DD/YYYY</option><option value="iso">YYYY-MM-DD</option></select></div><div class="onboard-field"><label for="obTheme">Theme</label><select id="obTheme"><option value="auto">Automatic seasonal</option><option value="spring">🌸 Spring</option><option value="summer">☀️ Summer</option><option value="autumn">🍂 Autumn</option><option value="winter">❄️ Winter</option><option value="valentine">💘 Valentine’s</option><option value="easter">🐣 Easter</option><option value="halloween">🎃 Halloween</option><option value="christmas">🎄 Christmas</option></select></div></div><div class="onboard-actions"><button class="action" onclick="finishOnboarding(false)">Start My Command Center</button></div><div class="onboard-sample"><button onclick="finishOnboarding(true)">Preview with sample data instead</button></div></div></div><div class="app"><aside><div class="brand">Our Home ♥<small>FAMILY COMMAND CENTER PRO</small></div><div class="home-art"><div class="sun"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><nav id="nav"></nav></aside><main>
 <div class="top"><div><h1 id="timeGreeting">Good morning ♥</h1><div id="homeName" style="font-family:Georgia,serif;font-size:1.28rem;font-weight:800;color:var(--ink);margin:2px 0 4px">Our Home</div><div class="tag" id="tag">Our Home ♥ Our Plan ♥ Our Happy Life</div></div><div class="home-art"><div class="sun" id="timeSky"></div><div class="tree t1"></div><div class="house"><div class="door"></div></div><div class="tree t2"></div></div><div class="controls"><span class="ghost" id="dashboardCurrency" style="pointer-events:none;display:inline-flex;align-items:center;min-width:64px;min-height:40px;font-weight:800;color:#314237;font-size:16px"></span><span class="ghost" id="dashboardDate" style="pointer-events:none;display:inline-flex;align-items:center;min-width:118px;min-height:40px;font-weight:800;color:#314237;font-size:16px"></span><select id="currency" style="display:none"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>CHF</option><option>JPY</option><option>INR</option><option>NZD</option><option>SGD</option></select><select id="datefmt" style="display:none"><option value="us">Date</option><option value="eu">Date</option><option value="iso">Date</option></select></div></div>
 <div id="dashboard" class="page active"><div class="grid"><div class="card kpi"><span>OPEN TASKS</span><b id="taskCount">0</b><small>Keep going! ✨</small></div><div class="card kpi"><span>BILLS DUE</span><b id="billTotal">—</b><small>Upcoming payments</small></div><div class="card kpi"><span>BALANCE</span><b id="balance">—</b><small>All accounts</small></div><div class="card kpi"><span>SAVINGS RATE</span><b id="savingRate">—</b><small>Monthly snapshot 🎉</small></div></div><div class="two"><div class="section"><h2>This Week</h2><div id="week"></div></div><div class="section"><h2>Don't Forget</h2><div id="reminders"></div></div></div><div class="two"><div class="section"><h2>Budget Snapshot</h2><div id="budget"></div></div><div class="section"><h2>Meals Today</h2><div id="mealPreview"></div></div></div></div>
