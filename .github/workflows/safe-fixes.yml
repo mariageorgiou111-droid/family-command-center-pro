@@ -1,4 +1,4 @@
-name: Remove Visible Newlines FINAL
+name: Remove Visible Newlines FINAL 2
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Remove the two visible newline sequences
+      - name: Remove only the two verified Spring CSS literals
         shell: python
         run: |
           from pathlib import Path
@@ -21,9 +21,8 @@ jobs:
           path = Path("index.html")
           text = path.read_text(encoding="utf-8")
 
-          # Build literal "\n\n" without escape ambiguity
-          bs = chr(92)
-          target = bs + "n" + bs + "n"
+          # Literal backslash followed by lowercase n.
+          target = chr(92) + "n"
 
           positions = []
           start = 0
@@ -35,46 +34,71 @@ jobs:
               positions.append(pos)
               start = pos + len(target)
 
-          print("FOUND:", len(positions))
-          print("POSITIONS:", positions)
+          print("ALL LITERAL BACKSLASH-N COUNT:", len(positions))
+          print("ALL POSITIONS:", positions)
 
-          if len(positions) != 2:
+          # Keep only occurrences around Spring CSS.
+          spring_positions = []
+
+          for pos in positions:
+              context = text[max(0, pos - 800):pos + 800].lower()
+
+              if "spring" in context and "style" in context:
+                  spring_positions.append(pos)
+
+          print("SPRING CANDIDATES:", spring_positions)
+
+          if len(spring_positions) != 2:
               raise RuntimeError(
-                  f"Safety stop: expected exactly 2, found {len(positions)}"
+                  "Safety stop: expected exactly 2 Spring candidates, "
+                  f"found {len(spring_positions)}"
               )
 
-          # Both occurrences must belong to Spring CSS
-          for pos in positions:
-              context = text[max(0, pos - 600):pos + 600].lower()
-              if "spring" not in context:
-                  raise RuntimeError(
-                      f"Safety stop: occurrence at {pos} is outside Spring CSS"
-                  )
+          # Remove ONLY those two characters "\n".
+          # Work right-to-left so positions stay valid.
+          fixed = text
 
-          fixed = text.replace(target, "\n\n")
+          for pos in reversed(spring_positions):
+              fixed = fixed[:pos] + fixed[pos + 2:]
+
+          if len(text) - len(fixed) != 4:
+              raise RuntimeError(
+                  "Safety stop: expected exactly 4 characters removed"
+              )
 
           path.write_text(fixed, encoding="utf-8")
 
-          print("SUCCESS: removed both visible newline sequences")
+          print("SUCCESS: removed exactly two literal backslash-n sequences")
 
-      - name: Verify cleanup
+      - name: Verify
         shell: python
         run: |
           from pathlib import Path
 
           text = Path("index.html").read_text(encoding="utf-8")
-          bs = chr(92)
-          target = bs + "n" + bs + "n"
+          target = chr(92) + "n"
 
-          remaining = text.count(target)
-          print("REMAINING:", remaining)
+          remaining = []
 
-          if remaining != 0:
-              raise RuntimeError(
-                  f"Verification failed: {remaining} remain"
-              )
+          start = 0
+          while True:
+              pos = text.find(target, start)
+              if pos == -1:
+                  break
 
-          print("VERIFIED: cleanup complete")
+              context = text[max(0, pos - 800):pos + 800].lower()
+
+              if "spring" in context and "style" in context:
+                  remaining.append(pos)
+
+              start = pos + len(target)
+
+          print("REMAINING SPRING CANDIDATES:", remaining)
+
+          if remaining:
+              raise RuntimeError("Verification failed")
+
+          print("VERIFIED")
 
       - name: Commit cleanup
         run: |
@@ -84,9 +108,9 @@ jobs:
           git add index.html
 
           if git diff --cached --quiet; then
-            echo "No changes detected"
+            echo "No index.html change detected"
             exit 1
           fi
 
-          git commit -m "Remove visible newline text"
+          git commit -m "Remove visible newline artifacts"
           git push
