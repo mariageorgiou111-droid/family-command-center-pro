@@ -3,13 +3,235 @@ name: Safe Fixes
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  inspect:
+  patch:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Inspect target areas
+      - name: Apply four surgical fixes
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+          original = text
+
+          print("INDEX BYTES:", len(text.encode("utf-8")))
+
+          # -------------------------------------------------
+          # FIX 1 — remove the two stray backslashes
+          # between </style> and the following <style>
+          # -------------------------------------------------
+          text, stray_count = re.subn(
+              r'(</style>)\s*\\\s*(<style\s+id="fcc-spring-(?:theme-v2|background-v5)">)',
+              r'\1\n\2',
+              text
+          )
+
+          if stray_count != 2:
+              raise RuntimeError(
+                  f"Expected exactly 2 stray backslashes; found {stray_count}"
+              )
+
+          print("OK: removed 2 stray backslashes")
+
+          # -------------------------------------------------
+          # FIX 2 — keep Settings date format synchronized
+          # with the canonical fccDateFmt value
+          # -------------------------------------------------
+          date_marker = "</body>"
+
+          date_fix = r'''
+          <script id="fcc-date-format-safe-fix">
+          (() => {
+            function syncFCCDateFormat(){
+              const main = document.getElementById('datefmt');
+              const settings = document.getElementById('settingsDateFmt');
+              const saved = localStorage.getItem('fccDateFmt') ||
+                            (main ? main.value : 'eu') || 'eu';
+
+              if(main) main.value = saved;
+              if(settings) settings.value = saved;
+            }
+
+            if(document.readyState === 'loading'){
+              document.addEventListener('DOMContentLoaded', syncFCCDateFormat);
+            } else {
+              syncFCCDateFormat();
+            }
+
+            window.addEventListener('storage', e => {
+              if(e.key === 'fccDateFmt') syncFCCDateFormat();
+            });
+          })();
+          </script>
+          '''
+
+          if 'id="fcc-date-format-safe-fix"' not in text:
+              if date_marker not in text:
+                  raise RuntimeError("Could not find </body> for date fix")
+              text = text.replace(
+                  date_marker,
+                  date_fix + "\n" + date_marker,
+                  1
+              )
+
+          print("OK: date format synchronization installed")
+
+          # -------------------------------------------------
+          # FIX 3 — Finance tabs: clean mobile horizontal
+          # scrolling without +4px width / negative margins
+          # -------------------------------------------------
+          old_finance = re.compile(
+              r'(<style\s+id="finance-mobile-fix">.*?'
+              r'@media\s*\(max-width:600px\)\s*\{\s*'
+              r'\.finance-tabs\s*\{)'
+              r'.*?'
+              r'(\}\s*\.finance-tabs\s+button\s*\{)',
+              re.DOTALL
+          )
+
+          finance_match = old_finance.search(text)
+
+          if not finance_match:
+              raise RuntimeError(
+                  "Could not locate Finance mobile tabs block"
+              )
+
+          finance_mobile = '''
+            width:100%;
+            max-width:100%;
+            margin-left:0;
+            margin-right:0;
+            padding:2px 10px 8px 2px;
+            gap:7px;
+            overflow-x:auto;
+            overflow-y:hidden;
+            box-sizing:border-box;
+          '''
+
+          text = (
+              text[:finance_match.start(1)] +
+              finance_match.group(1) +
+              finance_mobile +
+              finance_match.group(2) +
+              text[finance_match.end(2):]
+          )
+
+          print("OK: Finance mobile tabs corrected")
+
+          # -------------------------------------------------
+          # FIX 4 — Meals selector defaults to today's day
+          # -------------------------------------------------
+          meals_marker = "</body>"
+
+          meals_fix = r'''
+          <script id="fcc-meals-today-safe-fix">
+          (() => {
+            function setMealDayToToday(){
+              const mealDay = document.getElementById('mealDay');
+              if(!mealDay || mealDay.disabled) return;
+
+              const today =
+                ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+                [new Date().getDay()];
+
+              mealDay.value = today;
+            }
+
+            if(document.readyState === 'loading'){
+              document.addEventListener(
+                'DOMContentLoaded',
+                setMealDayToToday
+              );
+            } else {
+              setMealDayToToday();
+            }
+          })();
+          </script>
+          '''
+
+          if 'id="fcc-meals-today-safe-fix"' not in text:
+              if meals_marker not in text:
+                  raise RuntimeError("Could not find </body> for Meals fix")
+              text = text.replace(
+                  meals_marker,
+                  meals_fix + "\n" + meals_marker,
+                  1
+              )
+
+          print("OK: Meals defaults to today")
+
+          if text == original:
+              raise RuntimeError("No changes were made")
+
+          path.write_text(text, encoding="utf-8")
+
+          print("PATCH COMPLETE")
+          print("NEW INDEX BYTES:", len(text.encode("utf-8")))
+
+      - name: Validate inline JavaScript
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          import subprocess
+          import tempfile
+          import os
+
+          text = Path("index.html").read_text(encoding="utf-8")
+
+          scripts = re.findall(
+              r'<script(?:\s[^>]*)?>(.*?)</script>',
+              text,
+              flags=re.DOTALL | re.IGNORECASE
+          )
+
+          print("INLINE SCRIPTS:", len(scripts))
+
+          checked = 0
+
+          for i, script in enumerate(scripts, 1):
+              if not script.strip():
+                  continue
+
+              fd, temp_path = tempfile.mkstemp(suffix=".js")
+
+              try:
+                  with os.fdopen(fd, "w", encoding="utf-8") as f:
+                      f.write(script)
+
+                  result = subprocess.run(
+                      ["node", "--check", temp_path],
+                      capture_output=True,
+                      text=True
+                  )
+
+                  if result.returncode != 0:
+                      print(f"FAILED SCRIPT #{i}")
+                      print(result.stdout)
+                      print(result.stderr)
+                      raise RuntimeError(
+                          f"JavaScript validation failed in script #{i}"
+                      )
+
+                  checked += 1
+
+              finally:
+                  if os.path.exists(temp_path):
+                      os.remove(temp_path)
+
+          print("OK: JavaScript syntax valid")
+          print("SCRIPTS CHECKED:", checked)
+
+      - name: Verify only intended fixes
         shell: python
         run: |
           from pathlib import Path
@@ -17,24 +239,55 @@ jobs:
 
           text = Path("index.html").read_text(encoding="utf-8")
 
-          print("INDEX BYTES:", len(text.encode("utf-8")))
+          # No orphan backslash may remain between style blocks
+          remaining = re.findall(
+              r'</style>\s*\\\s*<style',
+              text,
+              flags=re.DOTALL
+          )
 
-          checks = [
-              ("mealDay", r".{0,250}mealDay.{0,350}"),
-              ("fccDateFmt", r".{0,250}fccDateFmt.{0,350}"),
-              ("finance-mobile-fix", r".{0,300}finance-mobile-fix.{0,1200}"),
-              ("stray-backslash", r"</style>\s*\\\s*.{0,500}"),
-          ]
-
-          for name, pattern in checks:
-              print("\n\n==========", name, "==========")
-              matches = re.findall(
-                  pattern,
-                  text,
-                  flags=re.DOTALL | re.IGNORECASE
+          if remaining:
+              raise RuntimeError(
+                  f"Stray backslash still present: {len(remaining)}"
               )
-              print("MATCHES:", len(matches))
 
-              for i, match in enumerate(matches[:10], 1):
-                  print("\n--- MATCH", i, "---")
-                  print(match)
+          if 'id="fcc-date-format-safe-fix"' not in text:
+              raise RuntimeError("Date-format safe fix missing")
+
+          if 'id="fcc-meals-today-safe-fix"' not in text:
+              raise RuntimeError("Meals-today safe fix missing")
+
+          finance = re.search(
+              r'<style\s+id="finance-mobile-fix">(.*?)</style>',
+              text,
+              flags=re.DOTALL
+          )
+
+          if not finance:
+              raise RuntimeError("Finance mobile CSS missing")
+
+          finance_css = finance.group(1)
+
+          if "width:calc(100% + 4px)" in finance_css.replace(" ", ""):
+              raise RuntimeError("Old Finance +4px width still present")
+
+          if "margin-left:-2px" in finance_css.replace(" ", ""):
+              raise RuntimeError("Old Finance negative margin still present")
+
+          print("VERIFICATION PASSED")
+          print("Only four targeted areas were patched")
+
+      - name: Commit fixes to main
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No index.html changes to commit"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add index.html
+          git commit -m "Apply four safe production fixes"
+          git push origin HEAD:main
