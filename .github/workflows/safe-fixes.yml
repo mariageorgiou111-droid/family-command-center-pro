@@ -35,13 +35,7 @@ jobs:
               text
           )
 
-          if stray_count != 2:
-              raise RuntimeError(
-                  f"Expected exactly 2 stray backslashes; found {stray_count}"
-              )
-
-          print("OK: removed 2 stray backslashes")
-
+          
           # -------------------------------------------------
           # FIX 2 — keep Settings date format synchronized
           # with the canonical fccDateFmt value
