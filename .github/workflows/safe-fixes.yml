@@ -1,4 +1,4 @@
-name: Remove Visible Newlines
+name: Remove Visible Newlines FINAL
 
 on:
   workflow_dispatch:
@@ -13,51 +13,49 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Remove only the two inspected literal newline sequences
+      - name: Remove the two visible newline sequences
         shell: python
         run: |
           from pathlib import Path
 
           path = Path("index.html")
           text = path.read_text(encoding="utf-8")
-          literal = r'\n\n'
+
+          # Build literal "\n\n" without escape ambiguity
+          bs = chr(92)
+          target = bs + "n" + bs + "n"
 
           positions = []
           start = 0
 
           while True:
-              pos = text.find(literal, start)
+              pos = text.find(target, start)
               if pos == -1:
                   break
               positions.append(pos)
-              start = pos + len(literal)
+              start = pos + len(target)
 
-          print("LITERAL NEWLINE COUNT:", len(positions))
+          print("FOUND:", len(positions))
           print("POSITIONS:", positions)
 
           if len(positions) != 2:
               raise RuntimeError(
-                  f"Safety stop: expected exactly 2 literal newline sequences, found {len(positions)}"
+                  f"Safety stop: expected exactly 2, found {len(positions)}"
               )
 
+          # Both occurrences must belong to Spring CSS
           for pos in positions:
-              context = text[max(0, pos - 500):pos + 500].lower()
-
+              context = text[max(0, pos - 600):pos + 600].lower()
               if "spring" not in context:
                   raise RuntimeError(
-                      f"Safety stop: occurrence at {pos} is not in Spring CSS context"
+                      f"Safety stop: occurrence at {pos} is outside Spring CSS"
                   )
 
-          fixed = text.replace(literal, "\n\n")
-
-          if len(fixed) >= len(text):
-              raise RuntimeError(
-                  "Safety stop: replacement did not reduce file length"
-              )
+          fixed = text.replace(target, "\n\n")
 
           path.write_text(fixed, encoding="utf-8")
 
-          print("SUCCESS: removed exactly 2 visible literal newline sequences")
+          print("SUCCESS: removed both visible newline sequences")
 
       - name: Verify cleanup
         shell: python
@@ -65,23 +63,30 @@ jobs:
           from pathlib import Path
 
           text = Path("index.html").read_text(encoding="utf-8")
-          remaining = text.count(r'\n\n')
+          bs = chr(92)
+          target = bs + "n" + bs + "n"
 
-          print("REMAINING LITERAL NEWLINE COUNT:", remaining)
+          remaining = text.count(target)
+          print("REMAINING:", remaining)
 
           if remaining != 0:
-              raise RuntimeError("Cleanup verification failed")
+              raise RuntimeError(
+                  f"Verification failed: {remaining} remain"
+              )
+
+          print("VERIFIED: cleanup complete")
 
       - name: Commit cleanup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet -- index.html; then
-            echo "No changes to commit."
+          git add index.html
+
+          if git diff --cached --quiet; then
+            echo "No changes detected"
             exit 1
           fi
 
-          git add index.html
           git commit -m "Remove visible newline text"
           git push
