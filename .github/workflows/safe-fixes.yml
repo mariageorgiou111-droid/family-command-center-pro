@@ -1,54 +1,78 @@
-name: Inspect Visible Newlines
+name: Remove Visible Newlines
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  inspect:
+  fix:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Locate literal newline text
+      - name: Replace only the two literal newline sequences
         shell: python
         run: |
           from pathlib import Path
+          import re
 
           path = Path("index.html")
           text = path.read_text(encoding="utf-8")
 
-          needle = "\\n"
-          positions = []
+          pattern = r'(</style>)\\n\\n(?=<style\b)'
 
-          start = 0
-          while True:
-              pos = text.find(needle, start)
-              if pos == -1:
-                  break
-              positions.append(pos)
-              start = pos + len(needle)
+          matches = list(re.finditer(pattern, text))
+          print("MATCHES FOUND:", len(matches))
 
-          print("INDEX BYTES:", len(text.encode("utf-8")))
-          print("LITERAL \\\\n COUNT:", len(positions))
+          if len(matches) != 2:
+              raise RuntimeError(
+                  f"Safety stop: expected exactly 2 matches, found {len(matches)}"
+              )
 
-          if not positions:
-              print("No literal \\\\n sequences found anywhere in index.html")
-          else:
-              for number, pos in enumerate(positions, 1):
-                  left = max(0, pos - 120)
-                  right = min(len(text), pos + 120)
+          fixed, count = re.subn(
+              pattern,
+              r'\1\n\n',
+              text
+          )
 
-                  context = text[left:right]
-                  context = context.replace("\r", "\\r")
-                  context = context.replace("\n", "\\n")
+          if count != 2:
+              raise RuntimeError(
+                  f"Safety stop: expected 2 replacements, made {count}"
+              )
 
-                  print("")
-                  print(f"--- MATCH {number} ---")
-                  print("POSITION:", pos)
-                  print("CONTEXT:")
-                  print(context)
+          path.write_text(fixed, encoding="utf-8")
 
-          print("")
-          print("INSPECTION COMPLETE")
-          print("NO FILES WERE MODIFIED")
+          print("SUCCESS: replaced exactly 2 literal newline sequences.")
+
+      - name: Verify cleanup
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          text = Path("index.html").read_text(encoding="utf-8")
+          remaining = len(
+              re.findall(r'(</style>)\\n\\n(?=<style\b)', text)
+          )
+
+          print("REMAINING MATCHES:", remaining)
+
+          if remaining != 0:
+              raise RuntimeError("Cleanup verification failed.")
+
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- index.html; then
+            echo "No changes to commit."
+            exit 1
+          fi
+
+          git add index.html
+          git commit -m "Remove visible newline text"
+          git push
