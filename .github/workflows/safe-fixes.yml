@@ -13,55 +13,64 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Replace only the two literal newline sequences
+      - name: Remove only the two inspected literal newline sequences
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           path = Path("index.html")
           text = path.read_text(encoding="utf-8")
+          literal = r'\n\n'
 
-          pattern = r'(</style>)\\n\\n(?=<style\b)'
+          positions = []
+          start = 0
 
-          matches = list(re.finditer(pattern, text))
-          print("MATCHES FOUND:", len(matches))
+          while True:
+              pos = text.find(literal, start)
+              if pos == -1:
+                  break
+              positions.append(pos)
+              start = pos + len(literal)
 
-          if len(matches) != 2:
+          print("LITERAL NEWLINE COUNT:", len(positions))
+          print("POSITIONS:", positions)
+
+          if len(positions) != 2:
               raise RuntimeError(
-                  f"Safety stop: expected exactly 2 matches, found {len(matches)}"
+                  f"Safety stop: expected exactly 2 literal newline sequences, found {len(positions)}"
               )
 
-          fixed, count = re.subn(
-              pattern,
-              r'\1\n\n',
-              text
-          )
+          for pos in positions:
+              context = text[max(0, pos - 500):pos + 500].lower()
 
-          if count != 2:
+              if "spring" not in context:
+                  raise RuntimeError(
+                      f"Safety stop: occurrence at {pos} is not in Spring CSS context"
+                  )
+
+          fixed = text.replace(literal, "\n\n")
+
+          if len(fixed) >= len(text):
               raise RuntimeError(
-                  f"Safety stop: expected 2 replacements, made {count}"
+                  "Safety stop: replacement did not reduce file length"
               )
 
           path.write_text(fixed, encoding="utf-8")
 
-          print("SUCCESS: replaced exactly 2 literal newline sequences.")
+          print("SUCCESS: removed exactly 2 visible literal newline sequences")
 
       - name: Verify cleanup
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           text = Path("index.html").read_text(encoding="utf-8")
-          remaining = len(
-              re.findall(r'(</style>)\\n\\n(?=<style\b)', text)
-          )
+          remaining = text.count(r'\n\n')
 
-          print("REMAINING MATCHES:", remaining)
+          print("REMAINING LITERAL NEWLINE COUNT:", remaining)
 
           if remaining != 0:
-              raise RuntimeError("Cleanup verification failed.")
+              raise RuntimeError("Cleanup verification failed")
 
       - name: Commit cleanup
         run: |
