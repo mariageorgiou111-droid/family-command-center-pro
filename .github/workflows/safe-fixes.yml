@@ -1,47 +1,54 @@
-name: Remove Visible Newlines
+name: Inspect Visible Newlines
 
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  fix:
+  inspect:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Remove visible newline text
+      - name: Locate literal newline text
         shell: python
         run: |
           from pathlib import Path
 
           path = Path("index.html")
           text = path.read_text(encoding="utf-8")
-          original = text
 
-          # Remove ONLY literal \n text at the very start of the HTML.
-          # This does not touch real line breaks elsewhere in the file.
-          count = 0
-          while text.startswith("\\n"):
-              text = text[2:]
-              count += 1
+          needle = "\\n"
+          positions = []
 
-          if count == 0:
-              raise RuntimeError("No literal \\\\n found at start of index.html")
+          start = 0
+          while True:
+              pos = text.find(needle, start)
+              if pos == -1:
+                  break
+              positions.append(pos)
+              start = pos + len(needle)
 
-          path.write_text(text, encoding="utf-8")
+          print("INDEX BYTES:", len(text.encode("utf-8")))
+          print("LITERAL \\\\n COUNT:", len(positions))
 
-          print(f"Removed {count} literal \\\\n sequence(s) from start of index.html")
-          print("No other app code was changed.")
+          if not positions:
+              print("No literal \\\\n sequences found anywhere in index.html")
+          else:
+              for number, pos in enumerate(positions, 1):
+                  left = max(0, pos - 120)
+                  right = min(len(text), pos + 120)
 
-      - name: Commit cleanup
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Remove visible newline text"
-          git push origin HEAD:main
+                  context = text[left:right]
+                  context = context.replace("\r", "\\r")
+                  context = context.replace("\n", "\\n")
+
+                  print("")
+                  print(f"--- MATCH {number} ---")
+                  print("POSITION:", pos)
+                  print("CONTEXT:")
+                  print(context)
+
+          print("")
+          print("INSPECTION COMPLETE")
+          print("NO FILES WERE MODIFIED")
