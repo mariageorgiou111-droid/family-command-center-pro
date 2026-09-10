@@ -8,5 +8,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          python -c "from pathlib import Path; p=Path('index.html'); t=p.read_text(); print(p.stat().st_size); print('mealDay',t.count('mealDay')); print('fccDateFmt',t.count('fccDateFmt')); print('finance-mobile-fix',t.count('finance-mobile-fix'))"
+
+      - name: Inspect target areas
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          text = Path("index.html").read_text(encoding="utf-8")
+
+          print("INDEX BYTES:", len(text.encode("utf-8")))
+
+          checks = [
+              ("mealDay", r".{0,250}mealDay.{0,350}"),
+              ("fccDateFmt", r".{0,250}fccDateFmt.{0,350}"),
+              ("finance-mobile-fix", r".{0,300}finance-mobile-fix.{0,1200}"),
+              ("stray-backslash", r"</style>\s*\\\s*.{0,500}"),
+          ]
+
+          for name, pattern in checks:
+              print("\n\n==========", name, "==========")
+              matches = re.findall(
+                  pattern,
+                  text,
+                  flags=re.DOTALL | re.IGNORECASE
+              )
+              print("MATCHES:", len(matches))
+
+              for i, match in enumerate(matches[:10], 1):
+                  print("\n--- MATCH", i, "---")
+                  print(match)
