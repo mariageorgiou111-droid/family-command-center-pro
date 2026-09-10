@@ -1,4 +1,4 @@
-name: Remove Visible Newlines FINAL 2
+name: Remove Visible Newlines FINAL 2 - Complete
 
 on:
   workflow_dispatch:
