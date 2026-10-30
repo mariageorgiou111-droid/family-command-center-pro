@@ -1,0 +1,8 @@
+{
+  "name": "family-command-center-pro",
+  "private": true,
+  "scripts": {
+    "build:cloudflare": "node scripts/build-cloudflare.mjs && node scripts/validate-cloudflare-dist.mjs",
+    "check:cloudflare": "node scripts/validate-cloudflare-dist.mjs"
+  }
+}
