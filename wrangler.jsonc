@@ -1,0 +1,8 @@
+{
+  // The existing Cloudflare Worker name is not recorded in this repository.
+  // Add the verified dashboard Worker name before the first deployment.
+  "compatibility_date": "2026-10-30",
+  "assets": {
+    "directory": "./dist"
+  }
+}
