@@ -16,8 +16,11 @@ export function publicConfig(env) {
   return { url: parsed.origin, key };
 }
 
-export async function build(env = process.env) {
-  const config = publicConfig(env); // Validate before replacing any build output.
+export async function build(env = process.env, { allowUnconfigured = false } = {}) {
+  const hasConfig = Boolean(env.SUPABASE_URL || env.SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_ANON_KEY);
+  // Cloudflare may validate static assets before auth has been configured.
+  // Partial or invalid configuration must still fail before replacing output.
+  const config = allowUnconfigured && !hasConfig ? null : publicConfig(env);
   await rm('dist', { recursive: true, force: true });
   await mkdir('dist/auth', { recursive: true });
   // Only the current local workspace and authenticated application are served.
@@ -25,6 +28,7 @@ export async function build(env = process.env) {
   await Promise.all(['index.html', 'shared.html'].map(file => copyFile(file, `dist/${file}`)));
   await cp('auth', 'dist/auth', { recursive: true });
   await writeFile('dist/auth/config.js', `window.FCC_AUTH_CONFIG = ${JSON.stringify(config).replaceAll('<', '\\u003c')};\n`);
+  if (!config) console.log('Built static workspaces with shared authentication disabled: public Supabase configuration is absent.');
 }
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) await build();

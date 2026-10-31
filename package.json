@@ -7,6 +7,8 @@
     "test:browser": "node tests/browser.mjs",
     "test:staging": "node tests/staging.mjs",
     "build": "node scripts/build.mjs",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs && npm run check:cloudflare",
+    "check:cloudflare": "node scripts/validate-cloudflare-dist.mjs",
     "check": "node --check auth/app.mjs && node --check auth/service.mjs && node --check auth/domains.mjs"
   }
 }

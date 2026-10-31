@@ -70,6 +70,29 @@ message. Missing variables fail the build before replacing an existing output.
 For a custom Supabase API domain, review and explicitly adapt the `connect-src`
 policy in `shared.html` before use; the default policy permits `*.supabase.co`.
 
+## Cloudflare build configuration
+
+Cloudflare's existing build command is `npm run build:cloudflare`. This command
+uses the same Phase 2B asset builder and then runs `npm run check:cloudflare`.
+`wrangler.jsonc` identifies the existing `family-command-center` Worker and uses
+`./dist` as its static asset directory. These commands build and validate files
+only; they do not invoke Wrangler, upload assets, or deploy.
+
+The Cloudflare validator checks that both active HTML pages and all five auth
+assets are present, source assets are byte-identical, generated configuration is
+public-only, and no extra files or symbolic links enter the publishable output.
+The old single-file validator from the separate Cloudflare build branch is not
+compatible with the Phase 2B application.
+
+If all public Supabase variables are absent, `build:cloudflare` produces
+`window.FCC_AUTH_CONFIG = null` and reports that shared authentication is disabled.
+The local workspace remains available and shared sign-in displays its existing
+configuration message. This supports static build checks without adding secrets
+or changing Supabase. Partial or invalid configuration, including secret/service-role
+keys, still fails. `npm run build` retains its strict requirement for public
+Supabase configuration. Configure public variables and rebuild before enabling
+shared auth. No Cloudflare dashboard settings were changed by this fix.
+
 ## Supabase prerequisites — review manually, no changes made by this PR
 
 Use a separate, already provisioned test project for verification. This PR does
@@ -126,7 +149,7 @@ reloads membership and has no fallback to another household's data.
 
 ```sh
 npm run check
-npm test                 # 12 unit tests
+npm test                 # 13 tests, including the Cloudflare build regression
 npm run test:browser     # Chromium at /usr/bin/chromium, or set CHROMIUM_PATH
 ```
 
@@ -135,7 +158,8 @@ forms, login errors, route protection, onboarding, invite display/revocation,
 password recovery, logout, reload persistence, auth-event clearing and preservation
 of seeded local data. They do not contact Supabase. Unit tests cover membership
 race guards, scoped requests, column allowlists, role guards, error paths, public
-configuration and Phase 2A integrity. These checks passed in the implementation
+configuration and Phase 2A integrity. The Cloudflare regression also tests complete
+asset packaging, unconfigured builds, invalid-key rejection and output integrity. These checks passed in the implementation
 environment. Mock tests are not evidence of real email delivery or RLS behavior.
 
 ### Opt-in tests with an isolated staging backend
