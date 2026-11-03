@@ -1,11 +1,11 @@
 import { HouseholdService, takeInvitation, routeFor } from './service.mjs';
-import { domains } from './domains.mjs';
+import { currencies, dateFormats } from './options.mjs';
 
 const root = document.querySelector('#app');
 const status = document.querySelector('#status');
 const config = window.FCC_AUTH_CONFIG;
 let session = null, service, client, epoch = 0, pendingToken = takeInvitation(location, history);
-let selectedDomain = domains[0], recovery = new URLSearchParams(location.search).get('flow') === 'recovery';
+let recovery = new URLSearchParams(location.search).get('flow') === 'recovery';
 let ready = false, busy = false;
 
 function node(tag, text, attrs = {}) {
@@ -33,7 +33,7 @@ function field(form, name, label, type = 'text', required = true, value = '') {
   } else {
     input = node('input', null, { name, type });
     if (type === 'email') input.autocomplete = 'email';
-    if (type === 'password') { input.minLength = 8; input.autocomplete = 'new-password'; }
+    if (type === 'password') { input.minLength = 12; input.autocomplete = 'new-password'; }
     if (type === 'number') { input.min = '0'; input.step = '0.01'; }
   }
   input.required = required;
@@ -116,7 +116,8 @@ function render() {
   }
   if (['login','signup','forgot','reset'].includes(route)) renderAuth(route);
   else if (route === 'onboarding') renderOnboarding();
-  else renderHousehold();
+  else if (location.hash === '#account') renderAccount();
+  else location.replace('app.html');
 }
 function renderAuth(route) {
   const titles = { login:'Sign in', signup:'Create your account', forgot:'Reset your password', reset:'Choose a new password' };
@@ -124,17 +125,16 @@ function renderAuth(route) {
   section.append(node('p', 'Each household member needs their own account. Use the email address your invitation was sent to.'));
   const form = node('form'); section.append(form);
   const email = route !== 'reset' ? field(form,'email','Email','email') : null;
-  const password = ['login','signup','reset'].includes(route) ? field(form,'password','Password (at least 8 characters)','password') : null;
-  if (route === 'login') password.autocomplete = 'current-password';
-  const name = route === 'signup' ? field(form,'name','Your display name','text',false) : null;
-  const confirmation = ['signup','reset'].includes(route) ? field(form,'confirm','Confirm password','password') : null;
+  const password = ['login','signup','reset'].includes(route) ? field(form,'password',route === 'login' ? 'Password' : 'Password (at least 12 characters)','password') : null;
+  if (route === 'login') { password.autocomplete = 'current-password'; password.minLength = 1; }
+  const confirmation = route === 'reset' ? field(form,'confirm','Confirm password','password') : null;
   formAction(form,titles[route], async () => {
     if (confirmation && confirmation.value !== password.value) throw new Error('Passwords do not match.');
     const redirect = new URL(location.pathname, location.origin).href;
     let result;
     if (route === 'login') result = await client.auth.signInWithPassword({ email:email.value.trim(), password:password.value });
     if (route === 'signup') result = await client.auth.signUp({ email:email.value.trim(), password:password.value,
-      options:{ emailRedirectTo:redirect, data:{ display_name:name.value.trim() } } });
+      options:{ emailRedirectTo:redirect } });
     if (route === 'forgot') result = await client.auth.resetPasswordForEmail(email.value.trim(), { redirectTo:`${redirect}?flow=recovery` });
     if (route === 'reset') result = await client.auth.updateUser({ password:password.value });
     if (result.error) throw result.error;
@@ -150,7 +150,10 @@ function renderAuth(route) {
   });
   if (route !== 'reset') {
     const nav = node('nav');
-    nav.append(link('Sign in','login'),link('Create account','signup'),link('Forgot password?','forgot')); section.append(nav);
+    if (route !== 'login') nav.append(link('Sign in','login'));
+    if (route !== 'signup') nav.append(link('Create account','signup'));
+    if (route !== 'forgot') nav.append(link('Forgot password?','forgot'));
+    section.append(nav);
   }
 }
 function renderOnboarding() {
@@ -158,8 +161,10 @@ function renderOnboarding() {
   section.append(node('p','Create a new, empty household or accept an invitation. Existing local data stays in the local workspace and is never uploaded automatically.'));
   const create = node('form'); create.append(node('h2','Create a household'));
   const name = field(create,'household','Household name'); name.maxLength = 80;
-  const currency = field(create,'currency','Currency (three-letter code)','text',true,'EUR'); currency.pattern = '[A-Za-z]{3}';
-  const date = field(create,'date','Date format',['eu','us','iso']);
+  const currency = field(create,'currency','Household currency',Object.keys(currencies),true,'EUR');
+  for (const option of currency.options) option.textContent = currencies[option.value];
+  const date = field(create,'date','Date format',Object.keys(dateFormats));
+  for (const option of date.options) option.textContent = dateFormats[option.value];
   formAction(create,'Create empty household', async () => {
     await service.create(name.value,currency.value.toUpperCase(),date.value);
     pendingToken = ''; await refreshSession(session);
@@ -172,81 +177,23 @@ function renderOnboarding() {
     await service.accept(token.value.trim()); pendingToken = ''; token.value = '';
     await refreshSession(session);
   });
-  section.append(create,join);
+  if (pendingToken) {
+    section.append(node('p','You have an invitation. Join the existing household; its name, currency and date format are already set.'),join);
+  } else section.append(create,join);
 }
-async function renderHousehold() {
+async function renderAccount() {
   const version = epoch;
-  const section = panel('Shared household');
-  const info = node('p','Loading household…'); section.append(info);
-  const selector = node('select',null,{'aria-label':'Shared collection'});
-  domains.forEach(domain => selector.append(node('option',domain.label,{value:domain.table})));
-  selector.value = selectedDomain.table;
-  const toolbar = node('div',null,{class:'toolbar'});
-  toolbar.append(selector,button('Refresh',()=>run(()=>refreshSession(session)),'secondary'),button('Add record',()=>openEditor(selectedDomain)));
-  section.append(toolbar,node('small','These records are stored in Supabase and shared with household members. Refresh to see another member’s changes. Up to 500 records per collection are shown.'));
-  const records = node('div'); section.append(records);
-  async function loadRecords() {
-    const domain = selectedDomain;
-    records.replaceChildren(node('p','Loading records…'));
-    try {
-      const rows = await service.read(domain);
-      if (version !== epoch || !records.isConnected || selectedDomain !== domain) return;
-      records.replaceChildren();
-      if (!rows.length) records.append(node('p','No shared records yet. Your local records remain in your local workspace.'));
-      rows.forEach(row => {
-        const card = node('article',null,{class:'record'});
-        card.append(node('pre',domain.fields.map(([key,label])=>`${label}: ${row[key] ?? '—'}`).join('\n')));
-        if (domain.table === 'home_care_items') card.append(node('small',`Record ID: ${row.id}`));
-        card.append(button('Edit',()=>openEditor(domain,row)),button('Delete',()=>confirmDelete(domain,row),'danger'));
-        records.append(card);
-      });
-    } catch (error) { if (version === epoch && records.isConnected) { records.replaceChildren(); message(error.message,true); } }
-  }
-  selector.addEventListener('change',()=> { selectedDomain = domains.find(d=>d.table === selector.value); loadRecords(); });
+  const section = panel('Household and account');
+  const dashboard = node('a','Open Dashboard',{href:'app.html'}); section.append(dashboard);
   try {
     const household = await service.household();
     if (version !== epoch || !section.isConnected) return;
-    info.textContent = `${household.name} · ${service.membership.role} · ${household.currency}`;
-    await loadRecords();
-    if (version === epoch && section.isConnected && ['owner','admin'].includes(service.membership?.role)) renderInvitations(section);
+    section.append(node('p',`${household.name} · ${service.membership.role}`),
+      node('p',`${currencies[household.currency] || household.currency} · ${dateFormats[household.date_format] || household.date_format}`),
+      node('p','Use the normal application pages for household records. This page manages your account and invitations only.'));
+    if (['owner','admin'].includes(service.membership.role)) renderInvitations(section);
+    else section.append(node('p','Ask your household owner or admin to manage invitations.'));
   } catch (error) { if (version === epoch) message(error.message,true); }
-}
-function modal(title) {
-  const dialog = node('dialog',null,{'aria-label':title});
-  dialog.append(node('h2',title)); document.body.append(dialog);
-  dialog.addEventListener('close',()=>dialog.remove());
-  return dialog;
-}
-function openEditor(domain, original = null) {
-  const dialog = modal(`${original ? 'Edit' : 'Add'} ${domain.label}`);
-  const form = node('form'); dialog.append(form);
-  const inputs = domain.fields.map(([key,label,type,required]) => {
-    let value = original?.[key] ?? (type === 'number' ? 0 : '');
-    if (type === 'datetime-local' && value) value = new Date(new Date(value).getTime() - new Date(value).getTimezoneOffset()*60000).toISOString().slice(0,16);
-    const input = field(form,key,label,type,required,value);
-    if (original && (key === domain.key || key === 'home_care_item_id')) input.disabled = true;
-    return [key,type,input];
-  });
-  formAction(form,'Save shared record',async () => {
-    const version = epoch;
-    const values = Object.fromEntries(inputs.map(([key,type,input]) => [key,
-      type === 'checkbox' ? input.checked : type === 'number' ? Number(input.value) :
-      type === 'datetime-local' ? (input.value ? new Date(input.value).toISOString() : null) :
-      ['date','time'].includes(type) ? input.value || null : input.value.trim()]));
-    await service.write(domain,values,original);
-    if (version !== epoch) return;
-    dialog.close(); render(); message('Shared record saved.');
-  });
-  form.append(button('Cancel',()=>dialog.close(),'secondary')); dialog.showModal();
-}
-function confirmDelete(domain,row) {
-  const dialog = modal('Delete this shared record?');
-  dialog.append(node('p','This removes the record for every household member. Local data is unaffected. Deleting a home care item also removes its shared service history.'));
-  dialog.append(button('Delete',()=>run(async()=>{
-    const version = epoch; await service.remove(domain,row);
-    if (version !== epoch) return;
-    dialog.close(); render(); message('Shared record deleted.');
-  }),'danger'),button('Cancel',()=>dialog.close(),'secondary')); dialog.showModal();
 }
 function renderInvitations(parent) {
   const section = node('section'); section.append(node('h2','Invite a household member'));

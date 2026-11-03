@@ -193,8 +193,8 @@ test('raw snapshot preserves malformed bytes and unknown fields without parsing,
   assert.equal(snapshot.values.fccFamilyName, null); assert.ok(Object.isFrozen(snapshot.values));
 });
 
-test('foundation is not imported by active pages and cannot ship in the current static build', async () => {
-  for (const file of ['index.html', 'shared.html', 'auth/app.mjs', 'scripts/build.mjs']) {
+test('legacy local page remains separate and the foundation cannot perform database writes', async () => {
+  for (const file of ['index.html', 'shared.html', 'auth/app.mjs']) {
     assert.doesNotMatch(await readFile(file, 'utf8'), /integration\//);
   }
   for (const file of ['records', 'store', 'repository', 'render', 'local-snapshot']) {
@@ -203,7 +203,7 @@ test('foundation is not imported by active pages and cannot ship in the current 
   }
 });
 
-test('existing app, auth, build and Phase 2A files retain the approved baseline hashes', async () => {
+test('legacy local app and unchanged foundation dependencies retain approved baseline hashes', async () => {
   // Fixed blob IDs make the scope contract portable without a Git checkout.
   const paths = JSON.parse(await readFile('tests/fixtures/foundation-baseline.json', 'utf8'));
   for (const [file, expected] of Object.entries(paths)) {

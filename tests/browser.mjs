@@ -4,13 +4,14 @@ import { createServer } from 'node:http';
 import { readFile, mkdtemp, rm } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import assert from 'node:assert/strict';
+import { sharedShell } from '../scripts/shared-shell.mjs';
 
 const server=createServer(async(req,res)=>{
   try {
     const path=new URL(req.url,'http://localhost').pathname;
     if(path==='/blank'){res.end('<!doctype html><title>Test</title>');return;}
-    let content=await readFile(`.${path}`);
-    if(path==='/shared.html') content=Buffer.from(content.toString().replace(/<script src="https:\/\/cdn[^>]+><\/script>/,'<script src="tests/mock-sdk.js"></script>'));
+    let content=path==='/app.html' ? Buffer.from(sharedShell(await readFile('index.html','utf8'))) : await readFile(`.${path}`);
+    if(['/shared.html','/app.html'].includes(path)) content=Buffer.from(content.toString().replace(/<script src="https:\/\/cdn[^>]+><\/script>/,'<script src="tests/mock-sdk.js"></script>'));
     if(path==='/auth/config.js') content=Buffer.from('window.FCC_AUTH_CONFIG={url:"https://test.supabase.co",key:"sb_publishable_test"};');
     res.setHeader('Content-Type',path.endsWith('.mjs')||path.endsWith('.js')?'text/javascript':path.endsWith('.css')?'text/css':'text/html');
     res.end(content);
@@ -65,6 +66,29 @@ try {
   await evaluate('location.hash="household"');
   await wait('document.querySelector("h1")?.textContent.includes("Set up")');
   await submit({household:'Our household',currency:'EUR',date:'eu'});
+  await wait('location.pathname === "/app.html" && document.querySelector("#homeName")?.textContent === "Our household"');
+  assert.equal(await evaluate('document.body.classList.contains("shared-dashboard")'),true);
+  assert.equal(await evaluate('typeof window.fccLoadLocalData'), 'undefined');
+  assert.equal(await evaluate('Array.from(document.querySelectorAll("#nav button")).filter(x=>!x.disabled).length'),1);
+  assert.equal(await evaluate('document.querySelectorAll("[onclick],[onchange]").length'),0);
+  // Speed up only the Dashboard poll timer in this test document.
+  await evaluate(`(()=>{const original=window.setTimeout;window.setTimeout=(fn,delay,...args)=>original(fn,delay===30000?200:delay,...args);})()`);
+  await evaluate(`(()=>{
+    const now=new Date(),day=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    window.mockState.rows.household_tasks=[{id:'task-other-device',household_id:'home-a',title:'<img src=x onerror="window.dashboardAttack=true">',priority:'High',is_done:false}];
+    window.mockState.rows.household_transactions=[{id:'income',household_id:'home-a',transaction_type:'Income',amount:1000,transaction_date:day,category:'Salary'}];
+    window.mockState.rows.household_bills=[{id:'bill',household_id:'home-a',name:'Water',amount:50,is_paid:false,due_date:day}];
+    window.dispatchEvent(new Event('focus'));
+  })()`);
+  await wait('document.querySelector("#taskCount").textContent === "1"');
+  assert.ok(await evaluate('document.querySelector("#balance").textContent.includes("1,000.00")'));
+  assert.equal(await evaluate('document.querySelector("#reminders img")'),null);
+  assert.equal(await evaluate('window.dashboardAttack === true'),false);
+  // Simulate another device's saved change; the scheduled poll updates without a click.
+  await evaluate('mockState.rows.household_tasks.push({id:"task-two",household_id:"home-a",title:"Second device",priority:"Normal",is_done:false})');
+  await wait('document.querySelector("#taskCount").textContent === "2"');
+  assert.equal(await evaluate('localStorage.getItem("fccProDataV7_6_QA")'),sentinel);
+  await navigate('/shared.html#account');
   await wait('document.querySelector("#app").textContent.includes("Our household · owner")');
   await submit({'invite-email':'member@example.com',role:'member'});
   await wait('document.querySelector("output")?.textContent.includes("#invite=")');
@@ -78,7 +102,9 @@ try {
   assert.equal(await evaluate('document.querySelector("#app").textContent.includes("Our household")'),false);
   // Confirmed signup, forgot-password and recovery UI paths.
   await evaluate('location.hash="signup"');await wait('document.querySelector("h1")?.textContent === "Create your account"');
-  await submit({email:'new@example.com',password:'password123',confirm:'password123',name:'New member'});
+  assert.equal(await evaluate('document.querySelectorAll("form input").length'),2);
+  assert.equal(await evaluate('document.querySelector("input[name=password]").minLength'),12);
+  await submit({email:'new@example.com',password:'password12345'});
   await wait('document.querySelector("#status").textContent.includes("Check your email")');
   await evaluate('location.hash="forgot"');await wait('document.querySelector("h1")?.textContent === "Reset your password"');
   await submit({email:'new@example.com'});await wait('document.querySelector("#status").textContent.includes("email will arrive")');
@@ -103,6 +129,20 @@ try {
   assert.equal(await evaluate('document.querySelector("#app").textContent.includes("Add record")'),false);
   await evaluate('mockAuthEvent("SIGNED_OUT",null)');
   await wait('document.querySelector("h1")?.textContent === "Sign in"');
+  await evaluate('localStorage.removeItem("fcc-supabase-auth-v1")');
+  await navigate('/shared.html#invite='+'c'.repeat(64));
+  await wait('document.querySelector("h1")?.textContent === "Sign in"');
+  await submit({email:'member@example.com',password:'password12345'});
+  await wait('document.querySelector("input[name=invitation]")?.value.length === 64');
+  assert.equal(await evaluate('document.querySelector("input[name=household]")'),null);
+  assert.equal(await evaluate('document.querySelector("select[name=currency]")'),null);
+  await evaluate('document.querySelector("input[name=invitation]").form.requestSubmit()');
+  await wait('location.pathname === "/app.html" && document.querySelector("#homeName")?.textContent === "Our household"');
+  await navigate('/shared.html#account');
+  await wait('document.querySelector("#app").textContent.includes("Our household · member")');
+  assert.equal(await evaluate('document.querySelector("input[name=invite-email]")'),null);
+  assert.equal(await evaluate('document.querySelector("#app").textContent.includes("Add record")'),false);
+  await click('Sign out'); await wait('document.querySelector("h1")?.textContent === "Sign in"');
   assert.equal(await evaluate('localStorage.getItem("fccProDataV7_6_QA")'),sentinel);
   assert.equal(await evaluate('localStorage.getItem("fccFamilyName")'),'Local family');
   // Exercise dormant rendering helpers in a real DOM, never in the live app.
@@ -122,7 +162,7 @@ try {
   assert.ok(safeRendering.title.includes('<img'));
   assert.equal(await evaluate('localStorage.getItem("fccProDataV7_6_QA")'),sentinel);
   console.log('PASS: Chromium auth forms, protected routes, onboarding, invite display/revocation, recovery, logout, reload persistence, auth-event clearing and local data preservation. SDK mocked; no live RLS claim.');
-  console.log('PASS: Dormant foundation renders malicious text literally in Chromium and binds edit actions to stable record IDs. No live backend.');
+  console.log('PASS: Original shared Dashboard hydration/polling, safe text, member invitation without repeated setup, and account-only management. No live backend.');
 } finally {
   socket?.close();chrome.kill('SIGTERM');server.close();
   await new Promise(resolve=>chrome.exitCode !== null ? resolve() : chrome.once('exit',resolve));

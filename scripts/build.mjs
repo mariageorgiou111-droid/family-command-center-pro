@@ -1,4 +1,5 @@
-import { mkdir, rm, copyFile, cp, writeFile } from 'node:fs/promises';
+import { mkdir, rm, copyFile, cp, writeFile, readFile } from 'node:fs/promises';
+import { sharedShell } from './shared-shell.mjs';
 
 export function publicConfig(env) {
   const url = env.SUPABASE_URL;
@@ -27,6 +28,8 @@ export async function build(env = process.env, { allowUnconfigured = false } = {
   // Historical HTML snapshots, SQL, tests and environment files are excluded.
   await Promise.all(['index.html', 'shared.html'].map(file => copyFile(file, `dist/${file}`)));
   await cp('auth', 'dist/auth', { recursive: true });
+  await cp('integration', 'dist/integration', { recursive: true });
+  await writeFile('dist/app.html', sharedShell(await readFile('index.html', 'utf8')));
   await writeFile('dist/auth/config.js', `window.FCC_AUTH_CONFIG = ${JSON.stringify(config).replaceAll('<', '\\u003c')};\n`);
   if (!config) console.log('Built static workspaces with shared authentication disabled: public Supabase configuration is absent.');
 }
