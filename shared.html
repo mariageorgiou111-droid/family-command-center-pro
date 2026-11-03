@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data:; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <title>Shared household · Family Command Center PRO</title>
+  <link rel="stylesheet" href="auth/style.css">
+</head>
+<body>
+  <header><a class="brand" href="shared.html">Family Command Center PRO</a><span>Shared household</span></header>
+  <main>
+    <p class="local-note">Your <a href="index.html">local workspace</a> stays on this browser. Shared records are separate. Signing in never uploads or replaces local data.</p>
+    <div id="status" role="status" aria-live="polite">Loading secure session…</div>
+    <div id="app" aria-busy="true"></div>
+    <noscript>Enable JavaScript to sign in. Your local data has not been changed.</noscript>
+  </main>
+  <script src="auth/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="module" src="auth/app.mjs"></script>
+</body>
+</html>
