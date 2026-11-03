@@ -1,5 +1,8 @@
 # Shared integration foundation — first implementation phase
 
+Historical scope for PR #4. The subsequent read-only Dashboard phase activates a
+subset of this foundation; see `SHARED_DASHBOARD_PHASE.md` for current branch behavior.
+
 Base: draft PR #3 at `86c24a58acf3ae8f62a8b05ffd9c4f35fe33e286`.
 Branch: `codex/shared-integration-foundation`.
 

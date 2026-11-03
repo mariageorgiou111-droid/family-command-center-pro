@@ -12,12 +12,12 @@ test('Cloudflare command builds complete assets, validates output and keeps auth
     cwd: directory, env: { ...env, ...overrides }, stdio: 'pipe', encoding: 'utf8'
   });
   try {
-    for (const file of ['package.json', 'index.html', 'shared.html', 'auth', 'scripts', 'wrangler.jsonc']) {
+    for (const file of ['package.json', 'index.html', 'shared.html', 'auth', 'scripts', 'integration', 'wrangler.jsonc']) {
       await cp(file, path.join(directory, file), { recursive: true });
     }
     const config = JSON.parse(await readFile(path.join(directory, 'wrangler.jsonc'), 'utf8'));
     assert.equal(config.assets.directory, './dist');
-    assert.match(run(['build:cloudflare']), /Validated 7 Cloudflare static assets; shared authentication disabled/);
+    assert.match(run(['build:cloudflare']), /Validated 17 Cloudflare static assets; shared authentication disabled/);
     assert.equal(await readFile(path.join(directory, 'dist/auth/config.js'), 'utf8'), 'window.FCC_AUTH_CONFIG = null;\n');
     const original = await readFile(path.join(directory, 'dist/index.html'));
     assert.throws(() => run(['build']), /Command failed/);

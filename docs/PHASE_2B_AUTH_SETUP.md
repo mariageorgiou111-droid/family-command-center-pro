@@ -1,5 +1,8 @@
 # Phase 2B — Authentication and shared household onboarding
 
+This documents PR #3's initial behavior. The subsequent Dashboard integration
+removes its duplicate shared-record interface; see `SHARED_DASHBOARD_PHASE.md`.
+
 ## Scope and architecture
 
 The existing app is a static, monolithic `index.html`, with in-page navigation,
