@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
+    "test:foundation": "node --test tests/foundation.test.mjs",
     "test:browser": "node tests/browser.mjs",
     "test:staging": "node tests/staging.mjs",
     "build": "node scripts/build.mjs",

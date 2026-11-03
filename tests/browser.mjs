@@ -105,7 +105,24 @@ try {
   await wait('document.querySelector("h1")?.textContent === "Sign in"');
   assert.equal(await evaluate('localStorage.getItem("fccProDataV7_6_QA")'),sentinel);
   assert.equal(await evaluate('localStorage.getItem("fccFamilyName")'),'Local family');
+  // Exercise dormant rendering helpers in a real DOM, never in the live app.
+  await navigate('/blank');
+  const safeRendering = await evaluate(`(async()=>{
+    const {recordElement}=await import('/integration/render.mjs');
+    const attack='<img src=x onerror="window.foundationAttack=true"><script>window.foundationAttack=true</script>';
+    let edited;
+    const record=recordElement(document,{id:'stable-record',title:attack,notes:'Literal notes: '+attack,onEdit:id=>{edited=id;}});
+    document.body.append(record);
+    record.querySelector('button').click();
+    return {imageCount:record.querySelectorAll('img').length,scriptCount:record.querySelectorAll('script').length,
+      title:record.querySelector('strong').textContent,edited,executed:window.foundationAttack===true};
+  })()`);
+  assert.equal(safeRendering.imageCount,0); assert.equal(safeRendering.scriptCount,0);
+  assert.equal(safeRendering.executed,false); assert.equal(safeRendering.edited,'stable-record');
+  assert.ok(safeRendering.title.includes('<img'));
+  assert.equal(await evaluate('localStorage.getItem("fccProDataV7_6_QA")'),sentinel);
   console.log('PASS: Chromium auth forms, protected routes, onboarding, invite display/revocation, recovery, logout, reload persistence, auth-event clearing and local data preservation. SDK mocked; no live RLS claim.');
+  console.log('PASS: Dormant foundation renders malicious text literally in Chromium and binds edit actions to stable record IDs. No live backend.');
 } finally {
   socket?.close();chrome.kill('SIGTERM');server.close();
   await new Promise(resolve=>chrome.exitCode !== null ? resolve() : chrome.once('exit',resolve));
