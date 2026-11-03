@@ -1,0 +1,17 @@
+{
+  "index.html": "9e28e90fbb5ce27940ad8ebcc5970977fbd40dfe33706d60d253ece89536c8b5",
+  "shared.html": "cfc5953e878ef7afeb55892d4b9762c971086a246fba54a0bf97ec248cc9a9f6",
+  "scripts/build.mjs": "7cfa982cc21ac2e9494db1dbae853eca166f0b93ddb8a4bb871cbfbeef2cdf42",
+  "scripts/build-cloudflare.mjs": "bf00d5b3277e20c283ec6d6f123dcf5d92f792826f1daea17cf984c76d34fdf8",
+  "scripts/validate-cloudflare-dist.mjs": "45240d72fb4f48d92d6db8ed7e8a300d3667ecf63cfb2c9c92682786d0460ea5",
+  "wrangler.jsonc": "341d91c8b65c854fcaf4bfe3bc472438fd83a8e9ddd2e7b8e3d40e8a140c00ac",
+  "auth/app.mjs": "9f5d0204dfc19d3d53dc6b4204be4f00f1a36e1cf85aa5471aae4b0fb701c68b",
+  "auth/config.js": "93f9dbdfffd46780c95e4f2896a013057be26367a73b29171d047b02b962732a",
+  "auth/domains.mjs": "49cfba1627d52efa3166987c5e85f966e6bdeb5e2d552a7758c20697d2cd63e6",
+  "auth/service.mjs": "e36d30ca92c067eb27c9a50f3e54089fc10a869e3d00a7b7fa750f234395ef1e",
+  "auth/style.css": "c1518faef43085c617778db83eabe001863ebe4612eb2477b20463fb98c663fe",
+  "supabase/migrations/202610090001_phase_2a_shared_households.sql": "f6d84142a518b3e220d5970d19c085f663d8b0d4b5f1b521ecce1bc5c76d65f5",
+  "supabase/rollbacks/202610090001_phase_2a_shared_households.rollback.sql": "ba6eecc69d23db8dbe9d76d12040c02ab82a6f93749d76397f14a852e12f1a67",
+  "supabase/tests/phase_2a_manual_security_test.md": "f1a1902f1dce8fd0755c1546558adba3dfe47f872eacb54168f517ecd218ef64",
+  "supabase/tests/phase_2a_schema_verification.sql": "917993b2f664a6cd365995859d4715e3067e181f628d6a287522ea2828ed8751"
+}
