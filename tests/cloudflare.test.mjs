@@ -8,7 +8,7 @@ test('Cloudflare command builds complete assets, validates output and keeps auth
   await mkdir('work', { recursive: true });
   const directory = await mkdtemp(path.resolve('work/cloudflare-test-'));
   const env = { ...process.env, SUPABASE_URL: '', SUPABASE_PUBLISHABLE_KEY: '', SUPABASE_ANON_KEY: '' };
-  const run = (args, overrides = {}) => execFileSync('npm', ['run', ...args], {
+  // Invoke npm through Node when npm itself launched this test: Windows cannot\n  // reliably spawn the extensionless npm shim with execFileSync.\n  const npmCli = process.env.npm_execpath;\n  const run = (args, overrides = {}) => execFileSync(npmCli ? process.execPath : 'npm', npmCli ? [npmCli, 'run', ...args] : ['run', ...args], {
     cwd: directory, env: { ...env, ...overrides }, stdio: 'pipe', encoding: 'utf8'
   });
   try {
