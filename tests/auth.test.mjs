@@ -109,7 +109,7 @@ test('public configuration rejects missing config and secret/service-role keys',
 });
 test('Phase 2A migration remains byte-for-byte identical to the reviewed schema',()=>{
   const bytes=readFileSync('supabase/migrations/202610090001_phase_2a_shared_households.sql');
-  const hash=createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+  // Git normalizes CRLF to LF for this text file; Windows checkouts may use CRLF.\n  const normalized = Buffer.from(bytes.toString('utf8').replace(/\r\n/g, '\n'));\n  const hash=createHash('sha1').update(`blob ${normalized.length}\0`).update(normalized).digest('hex');
   assert.equal(hash,'f0af754ecddd7a27b30a58e4605766c5fd1bea6a');
 });
 test('new auth code never touches local application storage or uses HTML injection',()=>{
