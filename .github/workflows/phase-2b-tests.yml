@@ -1,0 +1,30 @@
+name: Phase 2B tests
+
+on:
+  pull_request:
+    branches:
+      - codex/phase-2b-auth-household-onboarding
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Node checks and tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax checks
+        run: npm run check
+      - name: Unit and Cloudflare tests
+        run: npm test
+      - name: Validate Cloudflare static build
+        run: npm run build:cloudflare
